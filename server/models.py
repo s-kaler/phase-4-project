@@ -50,8 +50,8 @@ class Album(db.Model, SerializerMixin):
     image_url = db.Column(db.String)
     
     artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'), nullable=False)
-
     artist = db.relationship('Artist', back_populates='albums')
+    
     songs = db.relationship('Song', back_populates='album')
 
 class Song(db.Model, SerializerMixin):
@@ -62,9 +62,9 @@ class Song(db.Model, SerializerMixin):
     duration = db.Column(db.String, nullable=False)
 
     album_id = db.Column(db.Integer, db.ForeignKey('album.id'))
-    artist_id = db.Column(db.Integer, db.ForeignKey('artist.id') nullable=False)
-
     album = db.relationship('Album', back_populates='songs')
+
+    artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'), nullable=False)
     artist = db.relationship('Artist', back_populates='songs')
 
 class Playlist(db.Model, SerializerMixin):
@@ -74,7 +74,6 @@ class Playlist(db.Model, SerializerMixin):
     name = db.Column(db.String, nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
     user = db.relationship('User', back_populates='playlists', cascade='all, delete-orphan')
 
     songs = association_proxy('playlist_songs', 'song', creator=lambda song_obj: PlaylistSong(song=song_obj))
@@ -86,7 +85,7 @@ class PlaylistSong(db.Model, SerializerMixin):
     order = db.Column(db.Integer, unique=True)
 
     playlist_id = db.Column(db.Integer, db.ForeignKey('playlists.id'), nullable=False)
-    song_id = db.Column(db.Integer, db.ForeignKey('songs.id'), nullable=False)
-
     playlist = db.relationship('Playlist', back_populates='playlist_songs')
+
+    song_id = db.Column(db.Integer, db.ForeignKey('songs.id'), nullable=False)
     song = db.relationship('Song', back_populates='playlist_songs')
