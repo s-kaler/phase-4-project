@@ -1,15 +1,21 @@
 import { NavLink } from "react-router-dom";
+import SearchBar from "./SearchBar"
 
-function NavBar({ currentUser, isLoggedIn }) {
+function NavBar({ logout, login, currentUser, isLoggedIn=false }) {
     //creating link to user's profile page
-    const profileLink = `/profile/${currentUser.userId}`;
+    //const profileLink = `/profile/${currentUser.userId}`;
+    const profileLink = `/profile/1`;
+    
     //navigation bar includes links to homepage, logged in user's profile, and page to write a new blog post
     return (
         <nav className="navbar">
             <NavLink to="/" className="nav-link">Home</NavLink>
             {" "}
-            <NavLink to={profileLink} className="nav-link">{currentUser.username}'s Profile</NavLink>
-            {isLoggedIn ? <button onClick={logout} className="logout">Logout</button> : <></>}
+            <SearchBar />
+            {isLoggedIn ? <NavLink to={profileLink} className="nav-link">My Profile</NavLink> : <></>}
+            {isLoggedIn ?
+                <button onClick={login} className="logging">Log Out</button> :
+                <button onClick={logout} className="logging">Log In</button>}
         </nav>
     )
 }
