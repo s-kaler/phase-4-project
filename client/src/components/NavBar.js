@@ -4,7 +4,7 @@ import SearchBar from "./SearchBar"
 function NavBar({ logout, login, currentUser, isLoggedIn=false }) {
     //creating link to user's profile page
     //const profileLink = `/profile/${currentUser.userId}`;
-    const profileLink = `/profile/1`;
+    const profileLink = `/artist/1`;
     
     //navigation bar includes links to homepage, logged in user's profile, and page to write a new blog post
     return (

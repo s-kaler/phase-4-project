@@ -10,7 +10,7 @@ class Artist(db.Model, SerializerMixin):
     __tablename__ = 'artists'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, unique=True, nullable=False)
+    name = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     _password_hash = db.Column(db.String)
     biography = db.Column(db.String)
@@ -43,7 +43,7 @@ class Album(db.Model, SerializerMixin):
     release_date = db.Column(db.String, nullable=False)
     image_url = db.Column(db.String)
     
-    artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'), nullable=False)
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)
     artist = db.relationship('Artist', back_populates='albums')
     
     songs = db.relationship('Song', back_populates='album')
@@ -55,10 +55,10 @@ class Song(db.Model, SerializerMixin):
     title = db.Column(db.String, nullable=False)
     duration = db.Column(db.String, nullable=False)
 
-    album_id = db.Column(db.Integer, db.ForeignKey('album.id'))
+    album_id = db.Column(db.Integer, db.ForeignKey('albums.id'))
     album = db.relationship('Album', back_populates='songs')
 
-    artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'), nullable=False)
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)
     artist = db.relationship('Artist', back_populates='songs')
 
 class Playlist(db.Model, SerializerMixin):
@@ -67,7 +67,7 @@ class Playlist(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
 
-    artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'), nullable=False)
+    artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)
     artist = db.relationship('User', back_populates='playlists', cascade='all, delete-orphan')
 
     songs = association_proxy('playlist_songs', 'song', creator=lambda song_obj: PlaylistSong(song=song_obj))

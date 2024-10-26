@@ -20,14 +20,6 @@ def index():
     return '<h1>Project Server</h1>'
 
 ################################################################
-class Artists(Resource):
-    pass
-
-class ArtistByID(Resource):
-    pass
-
-################################################################
-
 
 
 class Artists(Resource):
@@ -59,8 +51,6 @@ class PlaylistSongs(Resource):
 
 api.add_resource(Artists, '/artists')
 api.add_resource(ArtistByID, '/artists/<int:artist_id>')
-api.add_resource(Artists, '/artists')
-api.add_resource(ArtistByID, '/artists/<int:artist_id>')
 api.add_resource(Albums, '/albums')
 api.add_resource(AlbumByID, '/albums/<int:album_id>')
 api.add_resource(Songs, '/songs')
@@ -73,10 +63,10 @@ api.add_resource(PlaylistSongs, '/playlists/<int:playlist_id>/songs')
 class Signup(Resource):
     def post(self):
         json = request.get_json()
-        if 'artistname' not in json or 'password' not in json or 'image_url' not in json or 'bio' not in json:
+        if 'name' not in json or 'password' not in json or 'image_url' not in json or 'bio' not in json:
             return {'error': 'Missing required fields'}, 422
         artist = Artist(
-            artistname=json['artistname']
+            name=json['name']
         )
         artist.password_hash = json['password']
         artist.image_url = json['image_url']
@@ -98,14 +88,14 @@ class CheckSession(Resource):
 
 class Login(Resource):
     def post(self):
-        artistname = request.get_json()['artistname']
-        artist = Artist.query.filter(Artist.artistname == artistname).first()
+        name = request.get_json()['name']
+        artist = Artist.query.filter(Artist.name == name).first()
         if artist:
             password = request.get_json()['password']
             if artist.authenticate(password):
                 session['artist_id'] = artist.id
                 return artist.to_dict(), 200
-        return {'error': 'Invalid artistname or password'}, 401
+        return {'error': 'Invalid name or password'}, 401
 
 class Logout(Resource):
     def delete(self):
