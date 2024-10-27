@@ -11,14 +11,11 @@ function Search(){
         });
         //console.log(formData);
     };
-    
+
     function handleSearchOptions(e) {
         const option = e.target.value;
         if (option === "artist") {
             setSearchLabel("Search By Artist Name or Genre")
-        }
-        else if (option === "album") {
-            setSearchLabel("Search By Album Title")
         }
         else if (option === "song") {
             setSearchLabel("Search By Song Title")
@@ -39,9 +36,6 @@ function Search(){
         if (formData.options === "artist") {
             console.log("Searching for artist...")
         }
-        else if (formData.options === "album") {
-            console.log("Searching for album...")
-        }
         else if (formData.options === "song") {
             console.log("Searching for song...")
         }
@@ -59,7 +53,6 @@ function Search(){
                     <p>{searchLabel}</p>
                     <select name="options" onChange={handleSearchOptions}>
                         <option value="artist">Artist</option>
-                        <option value="album">Album</option>
                         <option value="song">Song</option>
                         <option value="playlist">Playlist</option>
                     </select>

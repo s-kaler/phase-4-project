@@ -1,8 +1,8 @@
-"""initial migration
+"""initial migrate
 
-Revision ID: 9addbf74a502
+Revision ID: a64e2ad5bdf8
 Revises: 
-Create Date: 2024-10-26 22:17:30.252526
+Create Date: 2024-10-27 01:10:03.651521
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '9addbf74a502'
+revision = 'a64e2ad5bdf8'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,15 +29,6 @@ def upgrade():
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
     )
-    op.create_table('albums',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('title', sa.String(), nullable=False),
-    sa.Column('release_date', sa.String(), nullable=False),
-    sa.Column('image_url', sa.String(), nullable=True),
-    sa.Column('artist_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['artist_id'], ['artists.id'], name=op.f('fk_albums_artist_id_artists')),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('playlists',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
@@ -49,9 +40,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(), nullable=False),
     sa.Column('duration', sa.String(), nullable=False),
-    sa.Column('album_id', sa.Integer(), nullable=True),
     sa.Column('artist_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['album_id'], ['albums.id'], name=op.f('fk_songs_album_id_albums')),
     sa.ForeignKeyConstraint(['artist_id'], ['artists.id'], name=op.f('fk_songs_artist_id_artists')),
     sa.PrimaryKeyConstraint('id')
     )
@@ -73,6 +62,5 @@ def downgrade():
     op.drop_table('playlist_songs')
     op.drop_table('songs')
     op.drop_table('playlists')
-    op.drop_table('albums')
     op.drop_table('artists')
     # ### end Alembic commands ###

@@ -6,6 +6,8 @@ from config import db, bcrypt
 
 # Models go here!
 
+
+
 class Artist(db.Model, SerializerMixin):
     __tablename__ = 'artists'
 
@@ -16,7 +18,6 @@ class Artist(db.Model, SerializerMixin):
     biography = db.Column(db.String)
     image_url = db.Column(db.String)
 
-    albums = db.relationship('Album', back_populates='artist', cascade='all, delete-orphan')
     songs = db.relationship('Song', back_populates='artist', cascade='all, delete-orphan')
 
     playlists =  db.relationship('Playlist', back_populates='artist')
@@ -35,19 +36,6 @@ class Artist(db.Model, SerializerMixin):
     def authenticate(self, password):
         return bcrypt.check_password_hash(
             self._password_hash, password.encode('utf-8'))
-    
-class Album(db.Model, SerializerMixin):
-    __tablename__ = 'albums'
-
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String, nullable=False)
-    release_date = db.Column(db.String, nullable=False)
-    image_url = db.Column(db.String)
-    
-    artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)
-    artist = db.relationship('Artist', back_populates='albums')
-    
-    songs = db.relationship('Song', back_populates='album')
 
 class Song(db.Model, SerializerMixin):
     __tablename__ = 'songs'
@@ -55,9 +43,6 @@ class Song(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     duration = db.Column(db.String, nullable=False)
-
-    album_id = db.Column(db.Integer, db.ForeignKey('albums.id'))
-    album = db.relationship('Album', back_populates='songs')
 
     artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)
     artist = db.relationship('Artist', back_populates='songs')
