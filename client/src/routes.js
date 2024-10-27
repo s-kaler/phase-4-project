@@ -2,7 +2,6 @@ import App from './components/App';
 import Home from './components/Home';
 import Search from './components/Search';
 import ArtistPage from './components/ArtistPage';
-import AlbumPage from './components/AlbumPage';
 import PlaylistPage from './components/PlaylistPage';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
@@ -31,10 +30,6 @@ const routes =  [
             {
                 path: '/artist/:artistId',
                 element: <ArtistPage />
-            },
-            {
-                path: '/album/:albumId',
-                element: <AlbumPage />
             },
             {
                 path: '/playlist/:playlistId',
