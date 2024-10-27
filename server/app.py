@@ -23,7 +23,31 @@ def index():
 
 
 class Artists(Resource):
-    pass
+    def get(self):
+        response_dict_list = [n.to_dict() for n in Artist.query.all()]
+
+        response = make_response(response_dict_list, 200)
+
+        return response
+
+    def post(self):
+        form_data = request.get_json()
+        new_artist = Artist(
+            name=form_data['name'],
+            email=form_data['email'],
+            biography=form_data['biography'],
+            image_url=form_data['image_url']
+        )
+        new_artist.password_hash = form_data['password']
+
+        db.session.add(new_artist)
+        db.session.commit()
+
+        response_dict =  new_artist.to_dict()
+
+        response = make_response(response_dict, 201)
+        
+        return response
 
 class ArtistByID(Resource):
     pass
@@ -57,20 +81,21 @@ api.add_resource(Songs, '/songs')
 api.add_resource(SongByID, '/songs/<int:song_id>')
 api.add_resource(Playlists, '/playlists')
 api.add_resource(PlaylistByID, '/playlists/<int:playlist_id>')
-api.add_resource(PlaylistSongs, '/playlists/<int:playlist_id>/songs')
+#api.add_resource(PlaylistSongs, '/playlists/<int:playlist_id>/songs')
 
 
 class Signup(Resource):
     def post(self):
         json = request.get_json()
-        if 'name' not in json or 'password' not in json or 'image_url' not in json or 'bio' not in json:
+        if 'email' not in json or 'username' not in json or 'password' not in json or 'image_url' not in json or 'biography' not in json:
             return {'error': 'Missing required fields'}, 422
         artist = Artist(
-            name=json['name']
+            username=json['username'],
+            email=json['email']
         )
         artist.password_hash = json['password']
-        artist.image_url = json['image_url']
-        artist.bio = json['bio']
+        artist.image_url = ''
+        artist.biography = ''
         db.session.add(artist)
         db.session.commit()
         session['artist_id'] = artist.id
@@ -88,14 +113,14 @@ class CheckSession(Resource):
 
 class Login(Resource):
     def post(self):
-        name = request.get_json()['name']
-        artist = Artist.query.filter(Artist.name == name).first()
+        email = request.get_json()['email']
+        artist = Artist.query.filter(Artist.email == email).first()
         if artist:
             password = request.get_json()['password']
             if artist.authenticate(password):
                 session['artist_id'] = artist.id
                 return artist.to_dict(), 200
-        return {'error': 'Invalid name or password'}, 401
+        return {'error': 'Invalid email or password'}, 401
 
 class Logout(Resource):
     def delete(self):
@@ -105,6 +130,10 @@ class Logout(Resource):
         else:
             return {'error': 'Artist is not logged in'}, 401
 
+api.add_resource(Signup, '/signup', endpoint='signup')
+api.add_resource(CheckSession, '/check_session', endpoint='check_session')
+api.add_resource(Login, '/login', endpoint='login')
+api.add_resource(Logout, '/logout', endpoint='logout')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

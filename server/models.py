@@ -10,8 +10,8 @@ class Artist(db.Model, SerializerMixin):
     __tablename__ = 'artists'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
+    username = db.Column(db.String, unique=True, nullable=False)
     _password_hash = db.Column(db.String)
     biography = db.Column(db.String)
     image_url = db.Column(db.String)
@@ -20,6 +20,7 @@ class Artist(db.Model, SerializerMixin):
     songs = db.relationship('Song', back_populates='artist', cascade='all, delete-orphan')
 
     playlists =  db.relationship('Playlist', back_populates='artist')
+
 
     @hybrid_property
     def password_hash(self):
@@ -60,6 +61,11 @@ class Song(db.Model, SerializerMixin):
 
     artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)
     artist = db.relationship('Artist', back_populates='songs')
+    
+    playlist_songs = db.relationship('PlaylistSong', back_populates='song', cascade='all, delete-orphan')
+
+    playlists = association_proxy('playlist_songs', 'playlist', creator=lambda playlist_obj: PlaylistSong(playlist=playlist_obj))
+
 
 class Playlist(db.Model, SerializerMixin):
     __tablename__ = 'playlists'
@@ -68,11 +74,14 @@ class Playlist(db.Model, SerializerMixin):
     name = db.Column(db.String, nullable=False)
 
     artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)
-    artist = db.relationship('User', back_populates='playlists', cascade='all, delete-orphan')
+    artist = db.relationship('Artist', back_populates='playlists')
+
+    playlist_songs = db.relationship('PlaylistSong', back_populates='playlist', cascade='all, delete-orphan')
 
     songs = association_proxy('playlist_songs', 'song', creator=lambda song_obj: PlaylistSong(song=song_obj))
 
 
+# Association Model to store many-to-many relationship between playlist and song
 class PlaylistSong(db.Model, SerializerMixin):
     __tablename__ = 'playlist_songs'
 

@@ -1,21 +1,38 @@
-import { NavLink } from "react-router-dom";
-import SearchBar from "./SearchBar"
+import { NavLink, Navigate, useNavigate } from "react-router-dom";
 
-function NavBar({ logout, login, currentUser, isLoggedIn=false }) {
+function NavBar({ user, setUser }) {
+    const navigate = useNavigate();
     //creating link to user's profile page
     //const profileLink = `/profile/${currentUser.userId}`;
     const profileLink = `/artist/1`;
+
+    function handleLoginClick(){
+        navigate("/login");
+    }
+
+    function handleLogoutClick() {
+        /*
+        fetch("/logout", { method: "DELETE" }).then((r) => {
+            if (r.ok) {
+                setUser(null);
+            }
+        });
+        */
+        setUser(null);
+    }
+
     
-    //navigation bar includes links to homepage, logged in user's profile, and page to write a new blog post
+    
+    //navigation bar includes links to homepage, 
     return (
         <nav className="navbar">
             <NavLink to="/" className="nav-link">Home</NavLink>
             {" "}
-            <SearchBar />
-            {isLoggedIn ? <NavLink to={profileLink} className="nav-link">My Profile</NavLink> : <></>}
-            {isLoggedIn ?
-                <button onClick={login} className="logging">Log Out</button> :
-                <button onClick={logout} className="logging">Log In</button>}
+            <NavLink to="/search" className="nav-link">Search</NavLink>
+            {user ? <NavLink to={profileLink} className="nav-link">My Profile</NavLink> : <></>}
+            {user ?
+                <button onClick={handleLogoutClick} className="logging">Log Out</button> :
+                <button onClick={handleLoginClick} className="logging">Log In</button>}
         </nav>
     )
 }

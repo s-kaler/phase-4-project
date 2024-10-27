@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useOutletContext, Link } from "react-router-dom";
 
-function ArtistPage(props) {
+function ArtistPage() {
+    const params = useParams();
+    const isLoggedIn = useOutletContext();
+    
     return (
         <div>
             <h1>Artist Page:</h1>
