@@ -15,7 +15,7 @@ function Search(){
     function handleSearchOptions(e) {
         const option = e.target.value;
         if (option === "artist") {
-            setSearchLabel("Search By Artist Name or Genre")
+            setSearchLabel("Search By Artist Name")
         }
         else if (option === "song") {
             setSearchLabel("Search By Song Title")

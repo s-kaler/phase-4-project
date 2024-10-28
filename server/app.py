@@ -49,6 +49,8 @@ class Artists(Resource):
         
         return response
 
+api.add_resource(Artists, '/artists')
+
 class ArtistByID(Resource):
     def get(self, id):
         artist = Artist.query.filter(Artist.id == id).first()
@@ -82,6 +84,8 @@ class ArtistByID(Resource):
 
         return response
 
+api.add_resource(ArtistByID, '/artists/<int:id>')
+
 class Songs(Resource):
     def get(self):
         response_dict_list = [n.to_dict() for n in Song.query.all()]
@@ -90,6 +94,8 @@ class Songs(Resource):
 
         return response
 
+
+api.add_resource(Songs, '/songs')
 
 class ArtistSong(Resource):
     def get(self, artist_id):
@@ -150,6 +156,7 @@ class SongByID(Resource):
         response = make_response('', 204)
         return response
 
+api.add_resource(SongByID, '/songs/<int:id>')
 
 class Playlists(Resource):
     def get(self):
@@ -175,6 +182,35 @@ class Playlists(Resource):
         response = make_response(response_dict, 201)
         
         return response
+    
+
+api.add_resource(Playlists, '/playlists')
+
+class ArtistPlaylist(Resource):
+    def get(self, artist_id):
+        playlists = Playlist.query.filter(Playlist.artist_id == artist_id).all()
+        response_dict_list = [n.to_dict() for n in playlists]
+        response = make_response(response_dict_list, 200)
+        return response
+    
+    def post(self, artist_id):
+        form_data = request.get_json()
+        new_playlist = Playlist(
+            name=form_data['name'],
+            artist_id=artist_id
+        )
+
+        db.session.add(new_playlist)
+        db.session.commit()
+
+        response_dict =  new_playlist.to_dict()
+
+        response = make_response(response_dict, 201)
+        
+        return response
+
+api.add_resource(ArtistPlaylist, '/artists/<int:artist_id>/playlists')
+
 
 class PlaylistByID(Resource):
     def get(self, id):
@@ -200,30 +236,43 @@ class PlaylistByID(Resource):
         response = make_response(response_dict, 200)
         return response
 
-class PlaylistSongs(Resource):
-    pass
-
-api.add_resource(Artists, '/artists')
-api.add_resource(ArtistByID, '/artists/<int:id>')
-api.add_resource(Songs, '/songs')
-api.add_resource(SongByID, '/songs/<int:id>')
-api.add_resource(Playlists, '/playlists')
 api.add_resource(PlaylistByID, '/playlists/<int:id>')
-#api.add_resource(PlaylistSongs, '/playlists/<int:id>/songs')
 
-"""
-class HomeIndex(Resource):
-    def get(self):
-        artist_dict_list = [n.to_dict() for n in Artist.query.all()]
-        playlist_dict_list = [n.to_dict() for n in Playlist.query.all()]
-        response_dict_list = {'artists' : artist_dict_list, 'playlists' : playlist_dict_list}
+class PlaylistSongs(Resource):
+    def get(self, id):
+        songs = PlaylistSong.query.filter(PlaylistSong.playlist_id == id).all()
+        response_dict_list = [n.to_dict() for n in songs]
         response = make_response(response_dict_list, 200)
         return response
+    
+    def post(self, id):
+        form_data = request.get_json()
+        new_playlist_song = PlaylistSong(
+            song_id=form_data['song_id'],
+            playlist_id=id,
+        )
 
+        db.session.add(new_playlist_song)
+        db.session.commit()
 
-api.add_resource(HomeIndex, '/homeindex')
-"""
+        response_dict =  new_playlist_song.to_dict()
 
+        response = make_response(response_dict, 201)
+        
+        return response
+
+api.add_resource(PlaylistSongs, '/playlists/<int:id>/songs')
+
+class  PlaylistSongById(Resource):
+    def delete(self, id):
+        playlist_song = PlaylistSong.query.filter(PlaylistSong.id == id).first()
+        db.session.delete(playlist_song)
+        db.session.commit()
+
+        response = make_response('', 204)
+        return response
+    
+api.add_resource(PlaylistSongById, '/playlistsongs/<int:id>')
 
 class Signup(Resource):
     def post(self):

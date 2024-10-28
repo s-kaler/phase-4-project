@@ -7,6 +7,8 @@ import Login from './components/Login';
 import SignUp from './components/SignUp';
 import ArtistSongs from './components/ArtistSongs';
 import ArtistPlaylists from './components/ArtistPlaylists';
+import NewSong from './components/NewSong';
+import NewPlaylist from './components/NewPlaylist';
 
 const routes =  [
     {
@@ -44,6 +46,14 @@ const routes =  [
             {
                 path: '/playlist/:playlistId',
                 element: <PlaylistPage />
+            },
+            {
+                path: '/newsong',
+                element: <NewSong />
+            },
+            {
+                path: '/newplaylist',
+                element: <NewPlaylist />
             }
         ]
     }

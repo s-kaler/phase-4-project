@@ -26,3 +26,8 @@ main{
 .logging {
     float: right;
 }
+
+.songlist{
+    padding-top: 20x;
+    padding-bottom: 20x;
+}

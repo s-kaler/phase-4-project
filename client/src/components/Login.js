@@ -10,7 +10,7 @@ function Login({ onLogin }) {
     const [isLoading, setIsLoading] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
-    const [user, setUser] = useOutletContext();
+    const [user, setUser, userPlaylists] = useOutletContext();
 
     function handleSubmit(e) {
         e.preventDefault();

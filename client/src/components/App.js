@@ -9,15 +9,22 @@ function App() {
         username: '',
         id: '',
     });
+    const [userPlaylists, setUserPlaylists] = useState([])
     //const navigate = useNavigate();
     
     useEffect(() => {
         // auto-login
         fetch("/check_session").then((r) => {
             if (r.ok) {
-                r.json().then((user) => {
-                    console.log(user);
-                    setUser(user)});
+                r.json().then((fetchedUser) => {
+                    //console.log(user);
+                    setUser(fetchedUser)
+                    fetch(`/artists/${fetchedUser.id}/playlists`)
+                        .then(r => r.json())
+                        .then(data => {
+                            setUserPlaylists(data)
+                        })
+                });
             }
         });
     }, []);
@@ -25,7 +32,7 @@ function App() {
     return <div className="App">
         <NavBar user={user} setUser={setUser} />
         <main>
-            <Outlet context={[user, setUser]}/>
+            <Outlet context={[user, setUser, userPlaylists]}/>
         </main>
     </div>
 }

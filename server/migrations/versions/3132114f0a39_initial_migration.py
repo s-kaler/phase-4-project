@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: 7c89d2849e8e
+Revision ID: 3132114f0a39
 Revises: 
-Create Date: 2024-10-28 11:42:28.796974
+Create Date: 2024-10-28 16:14:14.574729
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7c89d2849e8e'
+revision = '3132114f0a39'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -45,13 +45,11 @@ def upgrade():
     )
     op.create_table('playlist_songs',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('order', sa.Integer(), nullable=True),
     sa.Column('playlist_id', sa.Integer(), nullable=False),
     sa.Column('song_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['playlist_id'], ['playlists.id'], name=op.f('fk_playlist_songs_playlist_id_playlists')),
     sa.ForeignKeyConstraint(['song_id'], ['songs.id'], name=op.f('fk_playlist_songs_song_id_songs')),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('order')
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 

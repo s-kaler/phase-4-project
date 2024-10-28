@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useOutletContext, Link } from "react-router-dom";
+import { useParams, useOutletContext, Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import ArtistSongs from "./ArtistSongs"
@@ -7,33 +7,36 @@ import ArtistPlaylists from "./ArtistPlaylists"
 
 function ArtistPage() {
     const params = useParams();
-    const [user, setUser]  = useOutletContext();
+    const [user, setUser, userPlaylists]  = useOutletContext();
     const [isUserArtist, setIsUserArtist] = useState(false)
     const [artist, setArtist] = useState({ 
         username: "",
         biography: "",
-        image_url: "",
-        playlists: []
+        image_url: ""
     })
+    const [playlists, setPlaylists] = useState([])
+
     const [isEditing, setIsEditing] = useState(false)
     //use local file image in /client/src/images/default-avatar.jpg
     const defaultImg = "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"
     const [imageURL, setImageURL] = useState(defaultImg)
+    const navigate = useNavigate();
 
     //console.log(params)
     useEffect(() => {
         fetch(`/artists/${params.artistId}`)
         .then(r => r.json())
         .then(data => {
-            console.log(data)
+            console.log(data.playlists)
             if (user && user.id === parseInt(params.artistId)) {
                 setIsUserArtist(true)
             }
             setArtist({
                 username: data.username,
                 biography: data.biography,
-                image_url: data.image_url,
+                image_url: data.image_url
             })
+            setPlaylists(data.playlists)
             if (data.image_url === "" || data.image_url === null) {
                 setImageURL(defaultImg)
             }
@@ -137,7 +140,13 @@ function ArtistPage() {
         </>
     )
 
-    
+    function handleNewSongClick(event) { 
+        navigate('/newsong')
+    }
+    function handleNewPlaylistClick(event) {
+        navigate('/newplaylist')
+    }
+
     if (isUserArtist) {
         //console.log(isEditing)
         return (
@@ -151,7 +160,11 @@ function ArtistPage() {
                         <button name="edit-button" onClick={handleEditClick}>Edit Profile</button>
                     </div>
                 }
-                <ArtistSongs artistId={params.artistId} /> 
+                <ArtistSongs artistId={params.artistId} isUserArtist={isUserArtist} playlists={playlists}/>
+                <button name="new-song" onClick={handleNewSongClick}>Create New Song</button>
+                <ArtistPlaylists artistId={params.artistId} playlists={playlists} />
+                <br></br>
+                <button name="new-playlist" onClick={handleNewPlaylistClick}>Create New Playlist</button>
                 </>
         )
     }
@@ -166,7 +179,8 @@ function ArtistPage() {
                     <p>{artist.biography}</p>
                 </div>
 
-                <ArtistSongs artistId={params.artistId} /> 
+                <ArtistSongs artistId={params.artistId} isUserArtist={isUserArtist} playlists={playlists} />
+                <ArtistPlaylists artistId={params.artistId} playlists={playlists} />
             </>
         )
     }
