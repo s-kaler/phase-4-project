@@ -12,8 +12,8 @@
 }
 
 body{
-    margin:0;
-    padding:0;
+    margin: 0px;
+    padding: 0px;
     font-family: Helvetica;
 }
 
@@ -30,4 +30,8 @@ main{
 .songlist{
     padding-top: 20x;
     padding-bottom: 20x;
+}
+
+.home{
+    justify-content: center;
 }
