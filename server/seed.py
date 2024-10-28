@@ -27,7 +27,7 @@ if __name__ == '__main__':
         ar4 = Artist(email=fake.email(), username=fake.first_name(), _password_hash='4123', biography=None, image_url=None)
         db.session.add_all([ar1,ar2,ar3,ar4])
         db.session.commit()
-        """
+        
         song1 = Song(title=fake.word(), duration=randint(1,240), artist_id=1)
         song2 = Song(title=fake.word(), duration=randint(1,240), artist_id=1)
         song3 = Song(title=fake.word(), duration=randint(1,240), artist_id=1)
@@ -42,4 +42,4 @@ if __name__ == '__main__':
         song12 = Song(title=fake.word(), duration=randint(1,240), artist_id=4)
         db.session.add_all([song1, song2, song3, song4, song5, song6, song7, song8, song9, song10, song11, song12])
         db.session.commit()
-        """
+        

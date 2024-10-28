@@ -5,6 +5,8 @@ import ArtistPage from './components/ArtistPage';
 import PlaylistPage from './components/PlaylistPage';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
+import ArtistSongs from './components/ArtistSongs';
+import ArtistPlaylists from './components/ArtistPlaylists';
 
 const routes =  [
     {
@@ -29,7 +31,15 @@ const routes =  [
             },
             {
                 path: '/artist/:artistId',
-                element: <ArtistPage />
+                element: <ArtistPage />,
+                children: [
+                    {
+                        element: <ArtistSongs />,
+                    },
+                    {
+                        element: <ArtistPlaylists />,
+                    }
+                ]
             },
             {
                 path: '/playlist/:playlistId',

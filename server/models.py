@@ -10,7 +10,7 @@ from config import db, bcrypt
 
 class Artist(db.Model, SerializerMixin):
     __tablename__ = 'artists'
-    serialize_rules = ('-songs.artist', '-playlists.artist',)
+    serialize_rules = ('-songs.artist', '-playlists.artist', '-songs.artist_id')
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, unique=True, nullable=False)
@@ -40,7 +40,7 @@ class Artist(db.Model, SerializerMixin):
 
 class Song(db.Model, SerializerMixin):
     __tablename__ = 'songs'
-    serialize_rules = ('-artist.songs', '-artist.playlists')
+    serialize_rules = ('-artist.songs', '-artist.playlists', '-playlist_songs', '-artist.email', '-artist.biography', '-artist.image_url', '-artist._password_hash',)
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
@@ -56,7 +56,7 @@ class Song(db.Model, SerializerMixin):
 
 class Playlist(db.Model, SerializerMixin):
     __tablename__ = 'playlists'
-    serialize_rules = ('-artist.playlists', '-artist.songs')
+    serialize_rules = ('-artist.playlists', '-artist.songs', '-playlist_songs')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)

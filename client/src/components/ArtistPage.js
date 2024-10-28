@@ -3,6 +3,7 @@ import { useParams, useOutletContext, Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import ArtistSongs from "./ArtistSongs"
+import ArtistPlaylists from "./ArtistPlaylists"
 
 function ArtistPage() {
     const params = useParams();
@@ -33,7 +34,7 @@ function ArtistPage() {
                 biography: data.biography,
                 image_url: data.image_url,
             })
-            if (data.image_url === "") {
+            if (data.image_url === "" || data.image_url === null) {
                 setImageURL(defaultImg)
             }
             else {
@@ -150,11 +151,12 @@ function ArtistPage() {
                         <button name="edit-button" onClick={handleEditClick}>Edit Profile</button>
                     </div>
                 }
+                <ArtistSongs artistId={params.artistId} /> 
                 </>
         )
     }
 
-    //<ArtistSongs artistId={params.artistId} /> 
+    //
     else {
         return (
             <>
@@ -163,6 +165,8 @@ function ArtistPage() {
                     <img src={imageURL} alt={artist.username} className="avatar" />
                     <p>{artist.biography}</p>
                 </div>
+
+                <ArtistSongs artistId={params.artistId} /> 
             </>
         )
     }

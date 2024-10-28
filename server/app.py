@@ -98,6 +98,22 @@ class ArtistSong(Resource):
         response = make_response(response_dict_list, 200)
         return response
     
+    def post(self, artist_id):
+        form_data = request.get_json()
+        new_song = Song(
+            title=form_data['title'],
+            duration=form_data['duration'],
+            artist_id=artist_id
+        )
+
+        db.session.add(new_song)
+        db.session.commit()
+
+        response_dict =  new_song.to_dict()
+
+        response = make_response(response_dict, 201)
+        
+        return response
 
 api.add_resource(ArtistSong, '/artists/<int:artist_id>/songs')
 
@@ -238,8 +254,8 @@ class CheckSession(Resource):
     def get(self):
         
         artist_id = session['artist_id']
-        if artist_id:
-            artist = Artist.query.filter(Artist.id == artist_id).first()
+        artist = Artist.query.filter(Artist.id == artist_id).first()
+        if artist:
             return artist.to_dict(), 200
         
         return {}, 401

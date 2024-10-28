@@ -10,24 +10,17 @@ function App() {
         id: '',
     });
     //const navigate = useNavigate();
-
+    
     useEffect(() => {
         // auto-login
-        fetch("/check_session")
-        .then((r) => {r.json()})
-        .then((data) => {
-            console.log(data)
-            /*
-            if (data.username) {
-                setUser(data);
+        fetch("/check_session").then((r) => {
+            if (r.ok) {
+                r.json().then((user) => {
+                    console.log(user);
+                    setUser(user)});
             }
-            else {
-                //navigate("/login");
-            }
-            */
         });
-    });
-    
+    }, []);
 
     return <div className="App">
         <NavBar user={user} setUser={setUser} />
