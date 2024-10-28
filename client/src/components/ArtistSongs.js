@@ -40,7 +40,6 @@ function ArtistSongs({ artistId, isUserArtist, playlists }) {
     }
     
 
-
     function handleAddToPlaylist(song, e) {
         e.preventDefault();
         console.log(e.target.selections.value)
@@ -59,14 +58,14 @@ function ArtistSongs({ artistId, isUserArtist, playlists }) {
             console.log(data)
             alert("Song added to playlist!")
         })
-        
     }
+    
 
     const songList = songData.map(song => {
         //console.log(isUserArtist)
         if (isUserArtist){
             return (
-                <div key = {song.id} >
+                <div key = {song.id}>
                     <li>{song.title} - {formatDuration(song.duration)} - <button onClick={() => handleDelete(song)}>Delete</button></li>
                     <form onSubmit={(e) => handleAddToPlaylist(song, e)}>
                         <select name="selections">

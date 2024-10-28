@@ -142,7 +142,7 @@ function Search() {
             <div>
                 {searchResults.map(artist => (
                     <h2 key={artist.id}>
-                        <Link to={`/artists/${artist.id}`}>{artist.username}</Link>
+                        <Link to={`/artist/${artist.id}`}>{artist.username}</Link>
                     </h2>
                 ))}
             </div>
@@ -154,7 +154,7 @@ function Search() {
             <div>
                 {searchResults.map(song => (
                     <p key={song.id}>
-                        <p>{song.title} by  - {formatDuration(song.duration)}</p>
+                        <p>{song.title} by {song.artist.username} - {formatDuration(song.duration)}</p>
                         <form onSubmit={(e) => handleAddToPlaylist(song, e)}>
                             <select name="selections">
                                 {userPlaylistOptions}

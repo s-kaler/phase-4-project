@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useOutletContext, Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import ArtistSongs from "./ArtistSongs"
 
 function PlaylistPage() {
     const params = useParams();
@@ -45,13 +46,59 @@ function PlaylistPage() {
             setUserPlaylists(data)
         })
     },[]);
+
+
+    function handleAddToPlaylist(song, e) {
+        e.preventDefault();
+        console.log(e.target.selections.value)
+        console.log(song.id)
+        fetch(`/playlists/${e.target.selections.value}/songs`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                song_id: song.id
+            }),
+        })
+            .then(r => r.json())
+            .then(data => {
+                console.log(data)
+                if(e.target.selections.value === params.playlistId) {
+                    setSongs([...songs, data])
+                }
+                alert("Song added to playlist!")
+            })
+    }
+
+    let userPlaylistOptions = []
+
+    if (userPlaylists) {
+        if (userPlaylists.length > 0) {
+            userPlaylistOptions = userPlaylists.map(playlist => (
+                <option key={playlist.id} value={playlist.id} name={playlist.name}>{playlist.name}</option>
+            ))
+        }
+        else {
+            userPlaylistOptions = <option value=""></option>
+        }
+    }
+
     let songList = []
     if(songs) {
         songList = songs.map(pSong => {
             if (isUserArtist) {
                 return (
-                    <li className="songlist" key={pSong.id}>{pSong.song.title} by {pSong.song.artist.username} - {formatDuration(pSong.song.duration)} - <button onClick={() => handleRemove(pSong)}>Remove</button></li>
-                )
+                    <div key={pSong.id}>
+                        <li className="songlist" key={pSong.id}>{pSong.song.title} by {pSong.song.artist.username} - {formatDuration(pSong.song.duration)} - <button onClick={() => handleRemove(pSong)}>Remove</button></li>
+                        <form onSubmit={(e) => handleAddToPlaylist(pSong.song, e)}>
+                            <select name="selections">
+                                {userPlaylistOptions}
+                            </select>
+                            <button type="submit">Add To Playlist</button>
+                        </form>
+                    </div>
+                    )
             }
             else {
                 return (
@@ -153,6 +200,28 @@ function PlaylistPage() {
             <button type="button" onClick={handleEditClick}>Cancel</button>
         </>
     )
+
+    function handleAddToPlaylist(song, e) {
+        e.preventDefault();
+        console.log(e.target.selections.value)
+        console.log(song.id)
+        fetch(`/playlists/${e.target.selections.value}/songs`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                song_id: song.id
+            }),
+        })
+            .then(r => r.json())
+            .then(data => {
+                console.log(data)
+                alert("Song added to playlist!")
+            })
+
+    }
+
 
     return (
         <div>
