@@ -1,4 +1,5 @@
 import { NavLink, Navigate, useNavigate } from "react-router-dom";
+import './App.css';
 
 function NavBar({ user, setUser }) {
     const navigate = useNavigate();

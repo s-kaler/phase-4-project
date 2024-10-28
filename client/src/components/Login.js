@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useOutletContext, Link, useNavigate } from "react-router-dom";
 import { Button, Error, Input, FormField, Label } from "../styles";
 import styled from "styled-components";
+import './App.css';
 
 function Login({ onLogin }) {
     const [email, setEmail] = useState("");

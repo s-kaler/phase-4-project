@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { useOutletContext, Link } from 'react-router-dom';
+import './App.css';
 
 function ArtistPlaylists({ artistId, playlists }){
     const [playlistData, setPlaylistData] = useState([])

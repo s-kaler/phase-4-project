@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import ArtistSongs from "./ArtistSongs"
 import ArtistPlaylists from "./ArtistPlaylists"
+import './App.css';
 
 function ArtistPage() {
     const params = useParams();
@@ -27,7 +28,7 @@ function ArtistPage() {
         fetch(`/artists/${params.artistId}`)
         .then(r => r.json())
         .then(data => {
-            console.log(data.playlists)
+            //console.log(data.playlists)
             if (user && user.id === parseInt(params.artistId)) {
                 setIsUserArtist(true)
             }

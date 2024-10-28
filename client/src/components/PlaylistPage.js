@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useOutletContext, Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import ArtistSongs from "./ArtistSongs"
+import './App.css';
 
 function PlaylistPage() {
     const params = useParams();
@@ -40,11 +40,14 @@ function PlaylistPage() {
             console.log(data)
             setSongs(data)
         })
-        fetch(`/artists/${user.id}/playlists`)
-        .then(r => r.json())
-        .then(data => {
-            setUserPlaylists(data)
-        })
+        if(user.id !== ''){
+            fetch(`/artists/${user.id}/playlists`)
+                .then(r => r.json())
+                .then(data => {
+                    setUserPlaylists(data)
+                })
+        }
+        
     },[]);
 
 
@@ -222,21 +225,35 @@ function PlaylistPage() {
 
     }
 
-
-    return (
-        <div>
-            {isEditing ? editFormik :
-                <>
-                    <h1>{playlistData.name}</h1>
-                    <button name="edit-button" onClick={handleEditClick}>Edit Playlist</button>
-                </>
-            }
-            <p>Created by {playlistData.artist.username}</p>
-            <ul>
-                {songList}
-            </ul>
-        </div>
-    )
+    if(isUserArtist)
+    {
+        return (
+            <div>
+                {isEditing ? editFormik :
+                    <>
+                        <h1>{playlistData.name}</h1>
+                        <button name="edit-button" onClick={handleEditClick}>Edit Playlist</button>
+                    </>
+                }
+                <p>Created by {playlistData.artist.username}</p>
+                <ul>
+                    {songList}
+                </ul>
+            </div>
+        )
+    }
+    else {
+        return (
+            <div>
+                <h1>{playlistData.name}</h1>   
+                <p>Created by {playlistData.artist.username}</p>
+                <ul>
+                    {songList}
+                </ul>
+            </div>
+        )
+    }
+    
 }
 
 export default PlaylistPage;

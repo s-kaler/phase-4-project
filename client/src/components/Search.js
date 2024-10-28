@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useOutletContext, Link, useNavigate } from "react-router-dom";
 import { isButtonElement } from "react-router-dom";
+import './App.css';
 
 
 function Search() {
@@ -74,8 +75,8 @@ function Search() {
 
     function handleAddToPlaylist(song, e) {
         e.preventDefault();
-        console.log(e.target.selections.value)
-        console.log(song.id)
+        //console.log(e.target.selections.value)
+        //console.log(song.id)
         fetch(`/playlists/${e.target.selections.value}/songs`, {
             method: "POST",
             headers: {
@@ -87,7 +88,7 @@ function Search() {
         })
             .then(r => r.json())
             .then(data => {
-                console.log(data)
+                //console.log(data)
                 alert("Song added to playlist!")
             })
 
@@ -102,17 +103,17 @@ function Search() {
         }
         // fetch API to search for the data based on the search term and selected option
         if (formData.options === "artist") {
-            console.log("Searching for artist...")
+            //console.log("Searching for artist...")
             setResults(allArtists.filter(artist => artist.username.toLowerCase().includes(formData.searchBox.toLowerCase())))
 
         }
         else if (formData.options === "song") {
-            console.log("Searching for song...")
+            //console.log("Searching for song...")
             setResults(allSongs.filter(song => song.title.toLowerCase().includes(formData.searchBox.toLowerCase())))
             
         }
         else if (formData.options === "playlist") {
-            console.log("Searching for playlist...")
+            //console.log("Searching for playlist...")
             setResults(allPlaylists.filter(playlist => playlist.name.toLowerCase().includes(formData.searchBox.toLowerCase())))
         }
     }
@@ -122,65 +123,119 @@ function Search() {
         const seconds = duration % 60;
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
-
-    return (
-        <div className="SearchPage">
-            <h1>Search</h1>
-            <span className="SearchBox">
-                <form onSubmit={handleSearchSubmit}>
-                    <p>{searchLabel}</p>
-                    <select name="options" onChange={handleSearchOptions}>
-                        <option value="artist">Artist</option>
-                        <option value="song">Song</option>
-                        <option value="playlist">Playlist</option>
-                    </select>
-                    <input type="text" id="searchBox" name="searchBox" onChange={handleChange}/>
-                    <button type="submit">Search</button>
-                </form>
-            </span>
-            {searchLabel.includes('Artist') && !isSearchWiped ?
-            <div>
-                {searchResults.map(artist => (
-                    <h2 key={artist.id}>
-                        <Link to={`/artist/${artist.id}`}>{artist.username}</Link>
-                    </h2>
-                ))}
+    if(user.id !== '')
+    {
+        return (
+            <div className="SearchPage">
+                <h1>Search</h1>
+                <span className="SearchBox">
+                    <form onSubmit={handleSearchSubmit}>
+                        <p>{searchLabel}</p>
+                        <select name="options" onChange={handleSearchOptions}>
+                            <option value="artist">Artist</option>
+                            <option value="song">Song</option>
+                            <option value="playlist">Playlist</option>
+                        </select>
+                        <input type="text" id="searchBox" name="searchBox" onChange={handleChange}/>
+                        <button type="submit">Search</button>
+                    </form>
+                </span>
+                {searchLabel.includes('Artist') && !isSearchWiped ?
+                <div>
+                    {searchResults.map(artist => (
+                        <h2 key={artist.id}>
+                            <Link to={`/artist/${artist.id}`}>{artist.username}</Link>
+                        </h2>
+                    ))}
+                </div>
+                :
+                <>
+                </>
+                }
+                {searchLabel.includes('Song') && !isSearchWiped ?
+                <div>
+                    {searchResults.map(song => (
+                        <div key={song.id}>
+                            <p>{song.title} by {song.artist.username} - {formatDuration(song.duration)}</p>
+                            <form onSubmit={(e) => handleAddToPlaylist(song, e)}>
+                                <select name="selections">
+                                    {userPlaylistOptions}
+                                </select>
+                                <button type="submit">Add To Playlist</button>
+                            </form>
+                        </div>
+                    ))}
+                </div>
+                :
+                <></>
+                }
+                {searchLabel.includes('Playlist') && !isSearchWiped ?
+                <div>
+                    {searchResults.map(playlist => (
+                        <h2 key={playlist.id}>
+                            <Link to={`/playlists/${playlist.id}`}>{playlist.name}</Link>
+                        </h2>
+                    ))}
+                </div>
+                :
+                <></>
+                }
             </div>
-            :
-            <>
-            </>
-            }
-            {searchLabel.includes('Song') && !isSearchWiped ?
-            <div>
-                {searchResults.map(song => (
-                    <p key={song.id}>
-                        <p>{song.title} by {song.artist.username} - {formatDuration(song.duration)}</p>
-                        <form onSubmit={(e) => handleAddToPlaylist(song, e)}>
-                            <select name="selections">
-                                {userPlaylistOptions}
-                            </select>
-                            <button type="submit">Add To Playlist</button>
-                        </form>
-                    </p>
-                ))}
+        );
+    }
+    else {
+        return (
+            <div className="SearchPage">
+                <h1>Search</h1>
+                <span className="SearchBox">
+                    <form onSubmit={handleSearchSubmit}>
+                        <p>{searchLabel}</p>
+                        <select name="options" onChange={handleSearchOptions}>
+                            <option value="artist">Artist</option>
+                            <option value="song">Song</option>
+                            <option value="playlist">Playlist</option>
+                        </select>
+                        <input type="text" id="searchBox" name="searchBox" onChange={handleChange} />
+                        <button type="submit">Search</button>
+                    </form>
+                </span>
+                {searchLabel.includes('Artist') && !isSearchWiped ?
+                    <div>
+                        {searchResults.map(artist => (
+                            <h2 key={artist.id}>
+                                <Link to={`/artist/${artist.id}`}>{artist.username}</Link>
+                            </h2>
+                        ))}
+                    </div>
+                    :
+                    <>
+                    </>
+                }
+                {searchLabel.includes('Song') && !isSearchWiped ?
+                    <div>
+                        {searchResults.map(song => (
+                            <div key={song.id}>
+                                <p>{song.title} by {song.artist.username} - {formatDuration(song.duration)}</p>
+                            </div>
+                        ))}
+                    </div>
+                    :
+                    <></>
+                }
+                {searchLabel.includes('Playlist') && !isSearchWiped ?
+                    <div>
+                        {searchResults.map(playlist => (
+                            <h2 key={playlist.id}>
+                                <Link to={`/playlist/${playlist.id}`}>{playlist.name}</Link>
+                            </h2>
+                        ))}
+                    </div>
+                    :
+                    <></>
+                }
             </div>
-            :
-            <></>
-            }
-            {searchLabel.includes('Playlist') && !isSearchWiped ?
-            <div>
-                {searchResults.map(playlist => (
-                    <h2 key={playlist.id}>
-                        <Link to={`/playlists/${playlist.id}`}>{playlist.name}</Link>
-                    </h2>
-                ))}
-            </div>
-            :
-            <></>
-            }
-        </div>
-        
-    );
+        );
+    }
 }
 
 export default Search;

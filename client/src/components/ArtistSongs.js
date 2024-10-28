@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import './App.css';
 
 function ArtistSongs({ artistId, isUserArtist, playlists }) {
     const [user, setUser, userPlaylists] = useOutletContext();
@@ -11,7 +12,7 @@ function ArtistSongs({ artistId, isUserArtist, playlists }) {
             //console.log(data)
             setSongData(data)
         })
-        console.log(userPlaylists)
+        //console.log(userPlaylists)
     }, [])
 
 
@@ -62,33 +63,43 @@ function ArtistSongs({ artistId, isUserArtist, playlists }) {
     
 
     const songList = songData.map(song => {
-        //console.log(isUserArtist)
-        if (isUserArtist){
-            return (
-                <div key = {song.id}>
-                    <li>{song.title} - {formatDuration(song.duration)} - <button onClick={() => handleDelete(song)}>Delete</button></li>
-                    <form onSubmit={(e) => handleAddToPlaylist(song, e)}>
-                        <select name="selections">
-                            {userPlaylistOptions}
-                        </select>
-                        <button type="submit">Add To Playlist</button>
-                    </form>
-                </div>
+        if(user.id !== '')
+        {
+            if (isUserArtist) {
+                return (
+                    <div key={song.id}>
+                        <li>{song.title} - {formatDuration(song.duration)} - <button onClick={() => handleDelete(song)}>Delete</button></li>
+                        <form onSubmit={(e) => handleAddToPlaylist(song, e)}>
+                            <select name="selections">
+                                {userPlaylistOptions}
+                            </select>
+                            <button type="submit">Add To Playlist</button>
+                        </form>
+                    </div>
                 )
+            }
+            else {
+                return (
+                    <div key={song.id} >
+                        <li key={song.id}>{song.title} - {formatDuration(song.duration)}</li>
+                        <form onSubmit={(e) => handleAddToPlaylist(song, e)}>
+                            <select name="selections">
+                                {userPlaylistOptions}
+                            </select>
+                            <button type="submit">Add To Playlist</button>
+                        </form>
+                    </div>
+                )
+            }
         }
         else {
             return (
-                <div key={song.id} >
-                    <li key={song.id}>{song.title} - {formatDuration(song.duration)}</li>
-                    <form onSubmit={(e) => handleAddToPlaylist(song, e)}>
-                        <select name="selections">
-                            {userPlaylistOptions}
-                        </select>
-                        <button type="submit">Add To Playlist</button>
-                    </form>
+                <div key={song.id}>
+                    <li>{song.title} - {formatDuration(song.duration)}</li>
                 </div>
             )
         }
+        
     })
     function formatDuration(duration) {
         const minutes = Math.floor(duration / 60);
