@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Outlet, Switch, Route, Navigate, useNavigate } from "react-router-dom";
 import NavBar from './NavBar';
+import './App.css';
 
 function App() {
     
@@ -12,13 +13,20 @@ function App() {
 
     useEffect(() => {
         // auto-login
-        fetch("/check_session").then((r) => {
-            if (r.ok) {
-                r.json().then((user) => setUser(user));
+        fetch("/check_session")
+        .then((r) => {r.json()})
+        .then((data) => {
+            console.log(data)
+            /*
+            if (data.username) {
+                setUser(data);
             }
-            else setUser(null)
+            else {
+                //navigate("/login");
+            }
+            */
         });
-    }, []);
+    });
     
 
     return <div className="App">

@@ -90,21 +90,17 @@ class Songs(Resource):
 
         return response
 
-    def post(self):
-        form_data = request.get_json()
-        new_song = Song(
-            title=form_data['title'],
-            duration=form_data['duration']
-        )
 
-        db.session.add(new_song)
-        db.session.commit()
-
-        response_dict =  new_song.to_dict()
-
-        response = make_response(response_dict, 201)
-        
+class ArtistSong(Resource):
+    def get(self, artist_id):
+        songs = Song.query.filter(Song.artist_id == artist_id).all()
+        response_dict_list = [n.to_dict() for n in songs]
+        response = make_response(response_dict_list, 200)
         return response
+    
+
+api.add_resource(ArtistSong, '/artists/<int:artist_id>/songs')
+
 
 class SongByID(Resource):
     def get(self, id):

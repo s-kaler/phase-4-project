@@ -33,8 +33,8 @@ function NavBar({ user, setUser }) {
             {" "}
             <NavLink to="/search" className="nav-link">Search</NavLink>
             {" "}
-            {user ? <NavLink to={profileLink} className="nav-link">My Profile</NavLink> : <></>}
-            {user ?
+            {user.id !== '' ? <NavLink to={profileLink} className="nav-link">My Profile</NavLink> : <></>}
+            {user.id !== '' ?
                 <button onClick={handleLogoutClick} className="logging">Log Out</button> :
                 <button onClick={handleLoginClick} className="logging">Log In</button>}
         </nav>

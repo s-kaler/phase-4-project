@@ -47,7 +47,7 @@ function Search(){
 
     return (
         <div className="SearchPage">
-            <h2>Search</h2>
+            <h1>Search</h1>
             <span className="SearchBox">
                 <form onSubmit={handleSearchSubmit}>
                     <p>{searchLabel}</p>

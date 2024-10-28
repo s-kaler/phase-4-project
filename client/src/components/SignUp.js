@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useFormik } from "formik";
 import { useOutletContext, Link, useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
 import * as yup from "yup";
 
-function SignUp({ onLogin }) {
+function SignUp() {
     const [error, setError] = useState([]);
     const [refreshPage, setRefreshPage] = useState(false);
     //const [artists, setArtists] = useState([{}]);
@@ -12,7 +12,7 @@ function SignUp({ onLogin }) {
 
 
     useEffect(() => {
-        console.log("FETCH! ");
+        //console.log("FETCH! ");
         fetch("/artists")
             .then((res) => res.json())
             .then((data) => {
@@ -20,7 +20,6 @@ function SignUp({ onLogin }) {
                 //console.log(data);
             });
     }, [refreshPage]);
-
 
 
     const formSchema = yup.object().shape({
@@ -65,7 +64,7 @@ function SignUp({ onLogin }) {
     return (
         <div>
             <h1>Sign Up</h1>
-            <form onSubmit={formik.handleSubmit} style={{ margin: "30px" }}>
+            <form onSubmit={formik.handleSubmit}>
                 <label htmlFor="email">Email Address</label>
                 <br />
                 <input

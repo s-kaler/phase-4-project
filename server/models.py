@@ -10,6 +10,7 @@ from config import db, bcrypt
 
 class Artist(db.Model, SerializerMixin):
     __tablename__ = 'artists'
+    serialize_rules = ('-songs.artist', '-playlists.artist',)
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, unique=True, nullable=False)
@@ -18,10 +19,10 @@ class Artist(db.Model, SerializerMixin):
     biography = db.Column(db.String)
     image_url = db.Column(db.String)
 
-    songs = db.relationship('Song', back_populates='artist', cascade='all, delete-orphan')
+    songs = db.relationship('Song', back_populates='artist')
 
     playlists =  db.relationship('Playlist', back_populates='artist')
-
+    
 
     @hybrid_property
     def password_hash(self):
@@ -39,6 +40,7 @@ class Artist(db.Model, SerializerMixin):
 
 class Song(db.Model, SerializerMixin):
     __tablename__ = 'songs'
+    serialize_rules = ('-artist.songs', '-artist.playlists')
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
@@ -54,6 +56,7 @@ class Song(db.Model, SerializerMixin):
 
 class Playlist(db.Model, SerializerMixin):
     __tablename__ = 'playlists'
+    serialize_rules = ('-artist.playlists', '-artist.songs')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -69,6 +72,7 @@ class Playlist(db.Model, SerializerMixin):
 # Association Model to store many-to-many relationship between playlist and song
 class PlaylistSong(db.Model, SerializerMixin):
     __tablename__ = 'playlist_songs'
+    serialize_rules = ('-playlist.playlist_songs', '-song.playlist_songs')
 
     id = db.Column(db.Integer, primary_key=True)
     order = db.Column(db.Integer, unique=True)

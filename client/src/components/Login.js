@@ -39,23 +39,28 @@ function Login({ onLogin }) {
 
     return (
         <div>
+            <h1>Login</h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="email">Email Address</label>
+                <br />
                 <input
                     type="text"
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                <br></br>
+                <br />
+                <br />
                 <label htmlFor="password">Password</label>
+                <br />
                 <input
                     type="password"
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <br></br>
+                <br />
+                <br />
                 <button type="submit">
                     {isLoading ? "Loading..." : "Login"}
                 </button>
