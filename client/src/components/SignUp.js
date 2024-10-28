@@ -1,88 +1,113 @@
-import React, { useState } from "react";
-import { useOutletContext, Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import { useOutletContext, Link, useNavigate } from "react-router-dom";
+import * as yup from "yup";
 
-function SignUpForm({ onLogin }) {
-    const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [passwordConfirmation, setPasswordConfirmation] = useState("");
-    const [errors, setErrors] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+function SignUp({ onLogin }) {
+    const [error, setError] = useState([]);
+    const [refreshPage, setRefreshPage] = useState(false);
+    //const [artists, setArtists] = useState([{}]);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const navigate = useNavigate();
 
-    function handleSubmit(e) {
-        e.preventDefault();
-        setErrors([]);
-        setIsLoading(true);
-        fetch("/signup", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email: email,
-                username: username,
-                password: password,
-                password_confirmation: passwordConfirmation,
-            }),
-        }).then((r) => {
-            setIsLoading(false);
-            if (r.ok) {
-                r.json().then((user) => onLogin(user));
-            } else {
-                r.json().then((err) => setErrors(err.errors));
-            }
-        });
-    }
+
+    useEffect(() => {
+        console.log("FETCH! ");
+        fetch("/artists")
+            .then((res) => res.json())
+            .then((data) => {
+                //setArtists(data);
+                //console.log(data);
+            });
+    }, [refreshPage]);
+
+
+
+    const formSchema = yup.object().shape({
+        email: yup.string().email("Invalid email").required("Must enter email"),
+        username: yup.string().required("Must enter a username").max(15),
+        password: yup.string().required("Please enter a password").max(20)
+    });
+
+    const formik = useFormik({
+        initialValues: {
+            name: "",
+            email: "",
+            password: "",
+            biography: "",
+            image_url: "",
+        },
+        validationSchema: formSchema,
+        onSubmit: (values) => {
+            fetch("artists", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values, null, 2),
+            }).then((res) => {
+                if (res.status == 201) {
+                    setRefreshPage(!refreshPage);
+                    setIsSubmitted(true);
+                    const interval = setTimeout(() => {
+                        navigate("/");
+                    }, 500);
+                    
+                }
+                else if(res.status == 422) {
+                    console.log(res.error);
+                }
+            });
+        },
+    });
+
 
     return (
-        <>
-            <form onSubmit={handleSubmit}>
+        <div>
+            <h1>Sign Up</h1>
+            <form onSubmit={formik.handleSubmit} style={{ margin: "30px" }}>
                 <label htmlFor="email">Email Address</label>
+                <br />
                 <input
-                    type="text"
                     id="email"
-                    autoComplete="off"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    name="email"
+                    onChange={formik.handleChange}
+                    value={formik.values.email}
                 />
-                <br></br>
-                <label htmlFor="username">Username</label>
+                <p style={{ color: "red" }}> {formik.errors.email}</p>
+
+                <label htmlFor="name">Username</label>
+                <br />
                 <input
-                    type="text"
                     id="username"
-                    autoComplete="off"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    name="username"
+                    onChange={formik.handleChange}
+                    value={formik.values.username}
                 />
-                <br></br>
+                <p style={{ color: "red" }}> {formik.errors.username}</p>
+
                 <label htmlFor="password">Password</label>
-                <input
+                <br />
+                <input 
+                id="password"
+                    name="password"
                     type="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="current-password"
+                    onChange={formik.handleChange}
+                    value={formik.values.password}
                 />
-                <br></br>
-                <label htmlFor="password">Password Confirmation</label>
-                <input
-                    type="password"
-                    id="password_confirmation"
-                    value={passwordConfirmation}
-                    onChange={(e) => setPasswordConfirmation(e.target.value)}
-                    autoComplete="current-password"
-                />
-                <br></br>
-                <button type="submit">{isLoading ? "Loading..." : "Sign Up"}</button>
-                {errors.map((err) => (
-                    <alert key={err}>{err}</alert>
-                ))}
+                <p style={{ color: "red" }}> {formik.errors.password}</p>
+
+                {isSubmitted ? <button disabled={true}>Submitted</button>: <button type="submit">Submit</button>}
+                
             </form>
-            <br></br>
-            <p>Already have an account? <Link to="/login">Log In</Link></p>
-            <p>{errors}</p>
-        </>
+            <p>{error}</p>
+            {isSubmitted ? <p></p> : null}
+        </div>
     );
+    
+
+
+
 }
 
-export default SignUpForm;
+export default SignUp;

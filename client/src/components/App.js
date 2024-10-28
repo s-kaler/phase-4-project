@@ -3,18 +3,13 @@ import { Outlet, Switch, Route, Navigate, useNavigate } from "react-router-dom";
 import NavBar from './NavBar';
 
 function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
-    /*
-    const [currentUser, setCurrentUser] = useState({
+    
+    const [user, setUser] = useState({
         username: '',
-        userId: 1,
+        id: '',
     });
-    */
     //const navigate = useNavigate();
 
-    const [user, setUser] = useState(null);
-
-    /*
     useEffect(() => {
         // auto-login
         fetch("/check_session").then((r) => {
@@ -24,15 +19,12 @@ function App() {
             else setUser(null)
         });
     }, []);
-    */
-
-
-    console.log(isLoggedIn)
+    
 
     return <div className="App">
         <NavBar user={user} setUser={setUser} />
         <main>
-            <Outlet context={[isLoggedIn]} />
+            <Outlet context={[user, setUser]}/>
         </main>
     </div>
 }

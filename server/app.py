@@ -199,23 +199,44 @@ api.add_resource(Playlists, '/playlists')
 api.add_resource(PlaylistByID, '/playlists/<int:id>')
 #api.add_resource(PlaylistSongs, '/playlists/<int:id>/songs')
 
+"""
+class HomeIndex(Resource):
+    def get(self):
+        artist_dict_list = [n.to_dict() for n in Artist.query.all()]
+        playlist_dict_list = [n.to_dict() for n in Playlist.query.all()]
+        response_dict_list = {'artists' : artist_dict_list, 'playlists' : playlist_dict_list}
+        response = make_response(response_dict_list, 200)
+        return response
+
+
+api.add_resource(HomeIndex, '/homeindex')
+"""
+
 
 class Signup(Resource):
     def post(self):
         json = request.get_json()
         if 'email' not in json or 'username' not in json or 'password' not in json or 'image_url' not in json or 'biography' not in json:
             return {'error': 'Missing required fields'}, 422
+        
         artist = Artist(
             username=json['username'],
             email=json['email']
         )
         artist.password_hash = json['password']
-        artist.image_url = ''
-        artist.biography = ''
-        db.session.add(artist)
-        db.session.commit()
-        session['artist_id'] = artist.id
-        return artist.to_dict(), 201
+        artist.image_url = None
+        artist.biography = None
+        try:
+            db.session.add(artist)
+            db.session.commit()
+            #session['artist_id'] = artist.id
+            return artist.to_dict(), 201
+        except Exception as err:
+            session.rollback()
+            if "UNIQUE constraint failed: user.user" in str(err):
+                return {'error': 'Username already exists'}, 422
+            elif "UNIQUE constraint failed: user.email" in str(err):
+                return {'error': 'Email already exists'}, 422
 
 class CheckSession(Resource):
     def get(self):
@@ -250,6 +271,10 @@ api.add_resource(Signup, '/signup', endpoint='signup')
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 api.add_resource(Login, '/login', endpoint='login')
 api.add_resource(Logout, '/logout', endpoint='logout')
+
+
+
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

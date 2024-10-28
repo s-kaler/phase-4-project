@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
-import { useOutletContext, Link } from "react-router-dom";
-
+import { useOutletContext, Link, useNavigate } from "react-router-dom";
+import { Button, Error, Input, FormField, Label } from "../styles";
+import styled from "styled-components";
 
 function Login({ onLogin }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [errors, setErrors] = useState([]);
+    const [error, setError] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const navigate = useNavigate();
+    const [user, setUser] = useOutletContext();
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -18,11 +22,17 @@ function Login({ onLogin }) {
             },
             body: JSON.stringify({ email, password }),
         }).then((r) => {
-            setIsLoading(false);
             if (r.ok) {
-                r.json().then((user) => onLogin(user));
+                setError(null);
+                setIsLoggedIn(true);
+                const interval = setTimeout(() => {
+                    r.json().then((user) => setUser(user));
+                    setIsLoading(false);
+                    navigate("/");
+                }, 500);
             } else {
-                r.json().then((err) => setErrors(err.errors));
+                setIsLoading(false);
+                setError("Invalid credentials")
             }
         });
     }
@@ -49,13 +59,10 @@ function Login({ onLogin }) {
                 <button type="submit">
                     {isLoading ? "Loading..." : "Login"}
                 </button>
-                {errors.map((err) => (
-                    <alert key={err}>{err}</alert>
-                ))}
+                <p>{error}</p>
             </form>
             <br></br>
             <p>Don't have an account? <Link to="/signup">Sign Up</Link></p>
-            <p>{errors}</p>
         </div>
         
     );

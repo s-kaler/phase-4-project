@@ -13,7 +13,7 @@ class Artist(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, unique=True, nullable=False)
-    username = db.Column(db.String, unique=True, nullable=False)
+    username = db.Column(db.String, nullable=False)
     _password_hash = db.Column(db.String)
     biography = db.Column(db.String)
     image_url = db.Column(db.String)
