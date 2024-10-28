@@ -7,7 +7,7 @@ import ArtistPlaylists from "./ArtistPlaylists"
 
 function ArtistPage() {
     const params = useParams();
-    const [user, setUser, userPlaylists]  = useOutletContext();
+    const [user, setUser, userPlaylists, setUserPlaylists]  = useOutletContext();
     const [isUserArtist, setIsUserArtist] = useState(false)
     const [artist, setArtist] = useState({ 
         username: "",
@@ -44,6 +44,11 @@ function ArtistPage() {
                 setImageURL(data.image_url)
             }
         })
+        fetch(`/artists/${user.id}/playlists`)
+            .then(r => r.json())
+            .then(data => {
+                setUserPlaylists(data)
+            })
     }, [user, params.artistId])
 
     

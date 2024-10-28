@@ -6,7 +6,7 @@ import * as yup from "yup";
 function NewPlaylist() {
 
     const navigate = useNavigate();
-    const [user, setUser] = useOutletContext();
+    const [user, setUser, userPlaylists, setUserPlaylists] = useOutletContext();
     const formSchema = yup.object().shape({
         name: yup.string().required("Must enter a name").max(30),
     });
@@ -28,6 +28,7 @@ function NewPlaylist() {
             })
                 .then(r => r.json())
                 .then(data => {
+                    setUserPlaylists([...userPlaylists, data]);
                     alert("New playlist created!")
                     navigate(`/playlist/${data.id}`)
                 })

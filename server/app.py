@@ -231,9 +231,17 @@ class PlaylistByID(Resource):
         db.session.add(playlist)
         db.session.commit()
 
-        response_dict = Playlist.to_dict()
+        response_dict = playlist.to_dict()
 
         response = make_response(response_dict, 200)
+        return response
+    
+    def delete(self, id):
+        playlist = Playlist.query.filter(Playlist.id == id).first()
+        db.session.delete(playlist)
+        db.session.commit()
+
+        response = make_response('', 204)
         return response
 
 api.add_resource(PlaylistByID, '/playlists/<int:id>')

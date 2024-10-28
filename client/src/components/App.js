@@ -32,7 +32,7 @@ function App() {
     return <div className="App">
         <NavBar user={user} setUser={setUser} />
         <main>
-            <Outlet context={[user, setUser, userPlaylists]}/>
+            <Outlet context={[user, setUser, userPlaylists, setUserPlaylists]}/>
         </main>
     </div>
 }
