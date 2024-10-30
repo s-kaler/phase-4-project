@@ -182,7 +182,7 @@ function Search() {
                     { searchResults.length > 0 ?
                         searchResults.map(playlist => (
                             <h2 key={playlist.id}>
-                                <Link to={`/playlists/${playlist.id}`}>{playlist.name}</Link>
+                                <Link to={`/playlist/${playlist.id}`}>{playlist.name}</Link>
                             </h2>
                         ))
                         :
