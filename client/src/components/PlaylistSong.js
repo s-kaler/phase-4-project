@@ -6,15 +6,22 @@ import './App.css';
 
 function PlaylistSong({ isUserArtist, pSong, handleRemove, handleAddToPlaylist, userPlaylists }) {
     const [formRating, setFormRating] = useState(0)
-    const [ratingText, setRatingText] = useState(formatRating(formatRating(pSong.rating)))
-    
-    console.log(isUserArtist)
+    const [ratingText, setRatingText] = useState(formatRating('Not Yet Rated'))
+    console.log(pSong.rating)
+    //console.log(isUserArtist)
     function formatDuration(duration) {
         const minutes = Math.floor(duration / 60);
         const seconds = duration % 60;
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
 
+    useEffect(() => {
+        if (pSong.rating) {
+            setFormRating(pSong.rating)
+            setRatingText(formatRating(pSong.rating))
+        }
+    }, [])
+    
     function formatRating(rating) {
         if (rating > 0) {
             let ratingStr = ''

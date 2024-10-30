@@ -30,7 +30,7 @@ function ArtistPage() {
         fetch(`/artists/${params.artistId}`)
         .then(r => r.json())
         .then(data => {
-            console.log(data)
+            //console.log(data)
             //console.log(data.playlists)
             if (user && user.id === parseInt(params.artistId)) {
                 setIsUserArtist(true)
