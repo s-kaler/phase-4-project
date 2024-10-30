@@ -31,20 +31,20 @@ function Home() {
     }, [])
 
     return (
-        <div style={{justifyContent: "center"}}>
+        <div className="Home">
             <h1>SoundFound</h1>
-            <div>
+            <div className="HomeDiv">
                 <h2>Featured Artists</h2>
                 {allArtists.map(artist => (
-                    <div key={artist.id}>
+                    <div className="HomeList" key={artist.id}>
                         <Link to={`/artist/${artist.id}`}>{artist.username}</Link>
                     </div>
                 ))}
             </div>
-            <div>
+            <div className="HomeDiv">
                 <h2>Featured Playlists</h2>
                 {allPlaylists.map(playlist => (
-                    <div key={playlist.id}>
+                    <div key={playlist.id} className="HomeList">
                         <p> <Link to={`/playlist/${playlist.id}`}>{playlist.name}</Link>: {playlist.genre} | Created by <Link to={`/artist/${playlist.artist.id}`}>{playlist.artist.username}</Link></p>
                     </div>
                 ))}

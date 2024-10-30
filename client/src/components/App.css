@@ -7,14 +7,15 @@
     padding-bottom: 20px;
     padding-left: 1%;
     padding-right: 1%;
-    background-color: paleturquoise;
+    background-color: rgb(58, 99, 99);
     font-size: larger;
 }
 
 body{
     margin: 0px;
-    padding: 0px;
     font-family: Helvetica;
+    background-color: rgb(29, 29, 29);
+    color: white;
 }
 
 main{
@@ -32,6 +33,34 @@ main{
     padding-bottom: 20x;
 }
 
-.home{
-    justify-content: center;
+a {
+    color: lightblue;
+}
+
+.Home {
+    justify-items: left;
+}
+
+.HomeDiv {
+    width: 80%;
+    background-color: rgb(42, 52, 68);
+    padding-top: 5px;
+    padding-left: 1%;
+    padding-bottom: 25px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.HomeList {
+    padding-left: 10px;
+}
+
+.ResultsDiv {
+    width: 80%;
+    background-color: rgb(42, 52, 68);
+    padding-top: 5px;
+    padding-left: 1%;
+    padding-bottom: 25px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }

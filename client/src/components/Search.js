@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useOutletContext, Link, useNavigate } from "react-router-dom";
-import { isButtonElement } from "react-router-dom";
 import './App.css';
 
 
@@ -138,7 +137,7 @@ function Search() {
                     </form>
                 </span>
                 {searchLabel.includes('Artist') && !isSearchWiped ?
-                <div>
+                <div className="ResultsDiv">
                     { searchResults.length > 0 ?
                         searchResults.map(artist => (
                             <h2 key={artist.id}>
@@ -154,7 +153,7 @@ function Search() {
                 </>
                 }
                 {searchLabel.includes('Song') && !isSearchWiped ?
-                <div>
+                <div className="ResultsDiv">
                     <h2>Results</h2>
                     {searchResults.length > 0 ?
                         searchResults.map(song => (
@@ -213,7 +212,7 @@ function Search() {
                     </form>
                 </span>
                 {searchLabel.includes('Artist') && !isSearchWiped ?
-                    <div>
+                    <div className="ResultsDiv">
                         <h2>Results</h2>
                         { searchResults.length > 0 ?
                             searchResults.map(artist => (
@@ -230,7 +229,7 @@ function Search() {
                     </>
                 }
                 {searchLabel.includes('Song') && !isSearchWiped ?
-                    <div>
+                    <div className="ResultsDiv">
                         <h2>Results</h2>
                         { searchResults.length > 0 ?
                             searchResults.map(song => (
@@ -246,7 +245,7 @@ function Search() {
                     <></>
                 }
                 {searchLabel.includes('Playlist') && !isSearchWiped ?
-                    <div>
+                    <div className="ResultsDiv">
                         <h2>Results</h2>
                         {  searchResults.length > 0 ?
                             searchResults.map(playlist => (
