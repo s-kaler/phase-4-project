@@ -49,6 +49,7 @@ function SignUp() {
                 if (res.status == 201) {
                     setRefreshPage(!refreshPage);
                     setIsSubmitted(true);
+                    alert("Successfully signed up!")
                     const interval = setTimeout(() => {
                         navigate("/");
                     }, 500);

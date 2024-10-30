@@ -193,6 +193,7 @@ function PlaylistPage() {
                 />
                 <p style={{ color: "red" }}> {formik.errors.name}</p>
                 <br />
+                <label htmlFor="genre">Genre:</label>
                 <input
                     id="genre"
                     name="genre"
