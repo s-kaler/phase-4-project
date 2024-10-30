@@ -2,19 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import './App.css';
 
-function ArtistSongs({ artistId, isUserArtist, playlists }) {
+function ArtistSongs({ artistId, isUserArtist, songs }) {
     const [user, setUser, userPlaylists] = useOutletContext();
-    const [songData, setSongData] = useState([])
-    useEffect(() => {
-        fetch(`/artists/${artistId}/songs`)
-        .then(r => r.json())
-        .then(data => {
-            //console.log(data)
-            setSongData(data)
-        })
-        //console.log(userPlaylists)
-    }, [])
-
+    const [songData, setSongData] = useState(songs)
 
     function handleDelete(song) {
         fetch(`/songs/${song.id}`, {
@@ -51,7 +41,8 @@ function ArtistSongs({ artistId, isUserArtist, playlists }) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                song_id: song.id
+                song_id: song.id,
+                rating: "0"
             }),
         })
        .then(r => r.json())
@@ -81,7 +72,7 @@ function ArtistSongs({ artistId, isUserArtist, playlists }) {
             else {
                 return (
                     <div key={song.id} >
-                        <li key={song.id}>{song.title} - {formatDuration(song.duration)}</li>
+                        <li>{song.title} - {formatDuration(song.duration)}</li>
                         <form onSubmit={(e) => handleAddToPlaylist(song, e)}>
                             <select name="selections">
                                 {userPlaylistOptions}
@@ -106,15 +97,22 @@ function ArtistSongs({ artistId, isUserArtist, playlists }) {
         const seconds = duration % 60;
         return `${minutes}:${seconds < 10? '0' : ''}${seconds}`;
     }
+    if (songList.length > 0) {
 
-    return (
-        <>
-        <h2>Songs</h2>
-        <ul>
-            {songList}
-        </ul>
-        </>
-    )
+        return (
+            <>
+            <h2>Songs</h2>
+            <ul>
+                {songList}
+            </ul>
+            </>
+        )
+    }
+    else {
+        return (
+            <h2>No songs found.</h2>
+        )
+    }
 }
 
 export default ArtistSongs;

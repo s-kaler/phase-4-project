@@ -18,6 +18,7 @@ function PlaylistPage() {
     const [songs, setSongs] = useState([])
     const [isEditing, setIsEditing] = useState(false)
     const [areYouSure, setAreYouSure] = useState(false)
+    const [isLoaded, setIsLoaded] = useState(false)
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -37,8 +38,9 @@ function PlaylistPage() {
         fetch(`/playlists/${params.playlistId}/songs`)
         .then(r => r.json())
         .then(data => {
-            console.log(data)
+            //console.log(data)
             setSongs(data)
+            setIsLoaded(true)
         })
         if(user.id !== ''){
             fetch(`/artists/${user.id}/playlists`)
@@ -61,7 +63,8 @@ function PlaylistPage() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                song_id: song.id
+                song_id: song.id,
+                rating: "0"
             }),
         })
             .then(r => r.json())
@@ -95,8 +98,10 @@ function PlaylistPage() {
                     <div key={pSong.id}>
                         <li className="songlist" key={pSong.id}>
                             {pSong.song.title} by <Link to={`/artist/${pSong.song.artist.id}`}>{pSong.song.artist.username}</Link>
-                             - {formatDuration(pSong.song.duration)} - <button onClick={() => handleRemove(pSong)}>Remove</button>
-                            </li>
+                             - {formatDuration(pSong.song.duration)} - |
+                            {" "}{formatRating(pSong.rating)}
+                            {" "}<button onClick={() => handleRemove(pSong)}>Remove</button>
+                        </li>
                         <form onSubmit={(e) => handleAddToPlaylist(pSong.song, e)}>
                             <select name="selections">
                                 {userPlaylistOptions}
@@ -109,7 +114,9 @@ function PlaylistPage() {
             else {
                 return (
                     <li className="songlist" key={pSong.id}>{pSong.song.title} by <Link to={`/artist/${pSong.song.artist.id}`}>{pSong.song.artist.username}</Link>
-                        - {formatDuration(pSong.song.duration)}</li>
+                        - {formatDuration(pSong.song.duration)} - |
+                        {" "}{formatRating(pSong.rating)}
+                    </li>
                 )
             }
         })
@@ -118,6 +125,19 @@ function PlaylistPage() {
         const minutes = Math.floor(duration / 60);
         const seconds = duration % 60;
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+
+    function formatRating(rating) {
+        if (rating === 0 || rating === null) {
+            return "Not Yet Rated"
+        }
+        else {
+            let ratingStr = ''
+            for (let i = 0; i < rating; i++) {
+                ratingStr += "★"
+            }
+            return ratingStr;
+        }
     }
 
     function handleRemove(pSong) {
@@ -218,46 +238,54 @@ function PlaylistPage() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                song_id: song.id
+                song_id: song.id,
+                rating: "0"
             }),
         })
             .then(r => r.json())
             .then(data => {
                 console.log(data)
                 alert("Song added to playlist!")
+                setSongs([...songs, data])
             })
 
     }
 
-    if(isUserArtist)
-    {
+    if (!isLoaded) {
         return (
-            <div>
-                {isEditing ? editFormik :
-                    <>
-                        <h1>{playlistData.name}</h1>
-                        <button name="edit-button" onClick={handleEditClick}>Edit Playlist</button>
-                    </>
-                }
-                <p>Created by {playlistData.artist.username}</p>
-                <ul>
-                    {songList}
-                </ul>
-            </div>
+            <h3>Loading...</h3>
         )
     }
     else {
-        return (
-            <div>
-                <h1>{playlistData.name}</h1>   
-                <p>Created by {playlistData.artist.username}</p>
-                <ul>
-                    {songList}
-                </ul>
-            </div>
-        )
+        if(isUserArtist)
+        {
+            return (
+                <div className="playlist-page">
+                    {isEditing ? editFormik :
+                        <>
+                            <h1>{playlistData.name}</h1>
+                            <button name="edit-button" onClick={handleEditClick}>Edit Playlist</button>
+                        </>
+                    }
+                    <p className="playlist-song">Created by <Link to={`/artist/${playlistData.artist.id}`}> {playlistData.artist.username}</Link ></p>
+                    <ul>
+                        {songList}
+                    </ul>
+                </div>
+            )
+        }
+        else {
+            return (
+                <div className="playlist-page">
+                    <h1>{playlistData.name}</h1>   
+                    <p className="playlist-song">Created by <Link to={`/artist/${playlistData.artist.id}`}> {playlistData.artist.username}</Link ></p>
+                    <ul>
+                        {songList}
+                    </ul>
+                </div>
+            )
+        }
     }
-    
 }
 
 export default PlaylistPage;

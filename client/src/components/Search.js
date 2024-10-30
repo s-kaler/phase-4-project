@@ -83,7 +83,8 @@ function Search() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                song_id: song.id
+                song_id: song.id,
+                rating: "0"
             }),
         })
             .then(r => r.json())
@@ -154,9 +155,10 @@ function Search() {
                 }
                 {searchLabel.includes('Song') && !isSearchWiped ?
                 <div>
+                    <h2>Results</h2>
                     {searchResults.map(song => (
                         <div key={song.id}>
-                            <p>{song.title} by {song.artist.username} - {formatDuration(song.duration)}</p>
+                            <p>{song.title} by <Link to={`/artist/${song.artist.id}`}>{song.artist.username}</Link> - {formatDuration(song.duration)}</p>
                             <form onSubmit={(e) => handleAddToPlaylist(song, e)}>
                                 <select name="selections">
                                     {userPlaylistOptions}
@@ -171,6 +173,7 @@ function Search() {
                 }
                 {searchLabel.includes('Playlist') && !isSearchWiped ?
                 <div>
+                    <h2>Results</h2>
                     {searchResults.map(playlist => (
                         <h2 key={playlist.id}>
                             <Link to={`/playlists/${playlist.id}`}>{playlist.name}</Link>
@@ -201,6 +204,7 @@ function Search() {
                 </span>
                 {searchLabel.includes('Artist') && !isSearchWiped ?
                     <div>
+                        <h2>Results</h2>
                         {searchResults.map(artist => (
                             <h2 key={artist.id}>
                                 <Link to={`/artist/${artist.id}`}>{artist.username}</Link>
@@ -213,9 +217,10 @@ function Search() {
                 }
                 {searchLabel.includes('Song') && !isSearchWiped ?
                     <div>
+                        <h2>Results</h2>
                         {searchResults.map(song => (
                             <div key={song.id}>
-                                <p>{song.title} by {song.artist.username} - {formatDuration(song.duration)}</p>
+                                <p>{song.title} by <Link to={`/artist/${song.artist.id}`}>{song.artist.username}</Link> - {formatDuration(song.duration)}</p>
                             </div>
                         ))}
                     </div>
@@ -224,6 +229,7 @@ function Search() {
                 }
                 {searchLabel.includes('Playlist') && !isSearchWiped ?
                     <div>
+                        <h2>Results</h2>
                         {searchResults.map(playlist => (
                             <h2 key={playlist.id}>
                                 <Link to={`/playlist/${playlist.id}`}>{playlist.name}</Link>

@@ -258,6 +258,7 @@ class PlaylistSongs(Resource):
         new_playlist_song = PlaylistSong(
             song_id=form_data['song_id'],
             playlist_id=id,
+            rating=form_data['rating']
         )
 
         db.session.add(new_playlist_song)
@@ -267,6 +268,21 @@ class PlaylistSongs(Resource):
 
         response = make_response(response_dict, 201)
         
+        return response
+    
+    def patch(self, id):
+        playlist_song = PlaylistSong.query.filter(PlaylistSong.id == id).first()
+        data = request.get_json()
+
+        for attr in data:
+            setattr(playlist_song, attr, data[attr])
+
+        db.session.add(playlist_song)
+        db.session.commit()
+
+        response_dict = playlist_song.to_dict()
+
+        response = make_response(response_dict, 200)
         return response
 
 api.add_resource(PlaylistSongs, '/playlists/<int:id>/songs')
@@ -310,8 +326,8 @@ class Signup(Resource):
 class CheckSession(Resource):
     def get(self):
         
-        artist_id = session['artist_id']
-        artist = Artist.query.filter(Artist.id == artist_id).first()
+        #artist_id = session['artist_id']
+        artist = Artist.query.filter(Artist.id == session['artist_id']).first()
         if artist:
             return artist.to_dict(), 200
         

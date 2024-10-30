@@ -4,14 +4,6 @@ import './App.css';
 
 function ArtistPlaylists({ artistId, playlists }){
     const [playlistData, setPlaylistData] = useState([])
-    useEffect(() => {
-        fetch(`/artists/${artistId}/playlists`)
-            .then(r => r.json())
-            .then(data => {
-                //console.log(data)
-                setPlaylistData(data)
-            })
-    }, [])
     
     let playlistList = []
     if (playlists) {
@@ -25,13 +17,20 @@ function ArtistPlaylists({ artistId, playlists }){
         })
     }
     
-
-    return (
-        <>
-            <h2>Playlists</h2>
-            {playlistList}
-        </>
-    )
+    if (playlists.length > 0)
+    {
+        return (
+            <>
+                <h2>Playlists</h2>
+                {playlistList}
+            </>
+        )
+    }
+    else {
+        return (
+            <h2>No playlists found.</h2>
+        )
+    }
 }
 
 
