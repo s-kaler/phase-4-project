@@ -179,11 +179,12 @@ function ArtistPage() {
                         </div>
                     }
                     <ArtistSongs artistId={params.artistId} isUserArtist={isUserArtist} songs={songs} />
+                    <br></br>
                     <button name="new-song" onClick={handleNewSongClick}>Create New Song</button>
                     <ArtistPlaylists artistId={params.artistId} playlists={playlists} />
                     <br></br>
                     <button name="new-playlist" onClick={handleNewPlaylistClick}>Create New Playlist</button>
-                    </>
+                </>
             )
         }
 
@@ -196,9 +197,10 @@ function ArtistPage() {
                         <img src={imageURL} alt={artist.username} className="avatar" />
                         <p>{artist.biography}</p>
                     </div>
-
                     <ArtistSongs artistId={params.artistId} isUserArtist={isUserArtist} songs={songs} />
+                    <br></br>
                     <ArtistPlaylists artistId={params.artistId} playlists={playlists} />
+                    <br></br>
                 </>
             )
         }

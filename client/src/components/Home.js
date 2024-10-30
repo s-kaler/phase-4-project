@@ -45,8 +45,7 @@ function Home() {
                 <h2>Featured Playlists</h2>
                 {allPlaylists.map(playlist => (
                     <div key={playlist.id}>
-                        <Link to={`/playlist/${playlist.id}`}>{playlist.name}</Link>
-                        <p>by {playlist.artist.username}</p>
+                        <p> <Link to={`/playlist/${playlist.id}`}>{playlist.name}</Link>: {playlist.genre} | Created by <Link to={`/artist/${playlist.artist.id}`}>{playlist.artist.username}</Link></p>
                     </div>
                 ))}
             </div>

@@ -60,12 +60,14 @@ function ArtistSongs({ artistId, isUserArtist, songs }) {
                 return (
                     <div key={song.id}>
                         <li>{song.title} - {formatDuration(song.duration)} - <button onClick={() => handleDelete(song)}>Delete</button></li>
+                        {userPlaylists.length > 0 ?
                         <form onSubmit={(e) => handleAddToPlaylist(song, e)}>
                             <select name="selections">
                                 {userPlaylistOptions}
                             </select>
                             <button type="submit">Add To Playlist</button>
                         </form>
+                        : <></>}
                     </div>
                 )
             }
@@ -73,12 +75,14 @@ function ArtistSongs({ artistId, isUserArtist, songs }) {
                 return (
                     <div key={song.id} >
                         <li>{song.title} - {formatDuration(song.duration)}</li>
-                        <form onSubmit={(e) => handleAddToPlaylist(song, e)}>
-                            <select name="selections">
-                                {userPlaylistOptions}
-                            </select>
-                            <button type="submit">Add To Playlist</button>
-                        </form>
+                        {userPlaylists.length > 0 ?
+                            <form onSubmit={(e) => handleAddToPlaylist(song, e)}>
+                                <select name="selections">
+                                    {userPlaylistOptions}
+                                </select>
+                                <button type="submit">Add To Playlist</button>
+                            </form>
+                        : <></>}
                     </div>
                 )
             }

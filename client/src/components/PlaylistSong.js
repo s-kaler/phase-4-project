@@ -6,7 +6,7 @@ import './App.css';
 
 function PlaylistSong({ isUserArtist, pSong, handleRemove, handleAddToPlaylist, userPlaylists }) {
     const [formRating, setFormRating] = useState(0)
-    const [ratingText, setRatingText] = useState(formatRating(pSong.rating))
+    const [ratingText, setRatingText] = useState(formatRating(formatRating(pSong.rating)))
     
     console.log(isUserArtist)
     function formatDuration(duration) {
@@ -16,17 +16,18 @@ function PlaylistSong({ isUserArtist, pSong, handleRemove, handleAddToPlaylist, 
     }
 
     function formatRating(rating) {
-        if (rating === 0 || rating === null) {
-            return "Not Yet Rated"
-        }
-        else {
+        if (rating > 0) {
             let ratingStr = ''
             for (let i = 0; i < rating; i++) {
                 ratingStr += "★"
             }
             return ratingStr;
         }
+        else {
+            return "Not Yet Rated"
+        }
     }
+    
 
     function onRemove(pSong) {
         fetch(`/playlistsongs/${pSong.id}`, {
@@ -73,18 +74,20 @@ function PlaylistSong({ isUserArtist, pSong, handleRemove, handleAddToPlaylist, 
                     {pSong.song.title} by <Link to={`/artist/${pSong.song.artist.id}`}>{pSong.song.artist.username}</Link>
                     - {formatDuration(pSong.song.duration)} - |
                     {" "}{ratingText}
-                    {" "}<button onClick={() => handleRemove(pSong)}>Remove</button>
+                    {" "}<button onClick={() => onRemove(pSong)}>Remove</button>
                     <form onSubmit={handleEditRating}>
-                        <input type="number" min="0" max="5" name="newRating" value={formRating} onChange={(e) => {setFormRating(e.target.value)}} />
+                        <input type="number" min="1" max="5" name="newRating" value={formRating} onChange={(e) => {setFormRating(e.target.value)}} />
                         <button type="submit">Update Rating</button>
                     </form>
                 </li>
-                <form onSubmit={(e) => handleAddToPlaylist(pSong.song, e)}>
-                    <select name="selections">
-                        {userPlaylistOptions}
-                    </select>
-                    <button type="submit">Add To Playlist</button>
-                </form>
+                {userPlaylists.length > 0 ?
+                    <form onSubmit={(e) => handleAddToPlaylist(pSong.song, e)}>
+                        <select name="selections">
+                            {userPlaylistOptions}
+                        </select>
+                        <button type="submit">Add To Playlist</button>
+                    </form>
+                :<></>}
             </div>
         )
     }

@@ -11,6 +11,7 @@ function PlaylistPage() {
     const [isUserArtist, setIsUserArtist] = useState(false)
     const [playlistData, setPlaylistData] = useState({
         name: "",
+        genre: "",
         artist_id: null,
         artist: {
             username: "",
@@ -32,6 +33,7 @@ function PlaylistPage() {
             }
             setPlaylistData({
                 name: data.name,
+                genre: data.genre,
                 artist_id: data.artist_id,
                 artist: data.artist,
             })
@@ -78,19 +80,6 @@ function PlaylistPage() {
             })
     }
 
-    let userPlaylistOptions = []
-
-    if (userPlaylists) {
-        if (userPlaylists.length > 0) {
-            userPlaylistOptions = userPlaylists.map(playlist => (
-                <option key={playlist.id} value={playlist.id} name={playlist.name}>{playlist.name}</option>
-            ))
-        }
-        else {
-            userPlaylistOptions = <option value=""></option>
-        }
-    }
-
     let songList = []
 
     if(songs)  {
@@ -128,33 +117,27 @@ function PlaylistPage() {
     }
 
     function handleRemove(pSong) {
-        fetch(`/playlistsongs/${pSong.id}`, {
-            method: "DELETE",
-        })
-        .then(r => {})
-        .then(data => {
-            setSongs(songs.filter(s => s.id!== pSong.id))
-            alert("Song deleted successfully!")
-        })
+        setSongs(songs.filter(s => s.id!== pSong.id))
+        alert("Song deleted successfully!")
     }
+    
 
     function handleEditClick() {
         setIsEditing(!isEditing)
     }
 
-    function handleEditRating(pSong) {
-
-    }
 
 
     const formSchema = yup.object().shape({
         name: yup.string().required("Must enter a name").max(30),
+        genre: yup.string().required("Must enter a genre").max(15),
     });
 
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
             name: playlistData.name,
+            genre: playlistData.genre,
         },
         validationSchema: formSchema,
         onSubmit: (values) => {
@@ -169,6 +152,7 @@ function PlaylistPage() {
                 .then(data => {
                     setPlaylistData({
                         name: data.name,
+                        genre: data.genre,
                         artist_id: data.artist_id,
                         artist: {
                             username: data.artist.username,
@@ -208,7 +192,15 @@ function PlaylistPage() {
                     value={formik.values.name}
                 />
                 <p style={{ color: "red" }}> {formik.errors.name}</p>
-                <br></br>
+                <br />
+                <input
+                    id="genre"
+                    name="genre"
+                    onChange={formik.handleChange}
+                    value={formik.values.genre}
+                />
+                <p style={{ color: "red" }}> {formik.errors.genre}</p>
+                <br />
                 <button type="submit">Update Playlist</button>
             </form>
             <br></br>
@@ -255,6 +247,7 @@ function PlaylistPage() {
                     {isEditing ? editFormik :
                         <>
                             <h1>{playlistData.name}</h1>
+                            <h3>Genre: {playlistData.genre}</h3>
                             <button name="edit-button" onClick={handleEditClick}>Edit Playlist</button>
                         </>
                     }
@@ -268,7 +261,8 @@ function PlaylistPage() {
         else {
             return (
                 <div className="playlist-page">
-                    <h1>{playlistData.name}</h1>   
+                    <h1>{playlistData.name}</h1>
+                    <h3>Genre: {playlistData.genre}</h3>  
                     <p>Created by <Link to={`/artist/${playlistData.artist.id}`}> {playlistData.artist.username}</Link ></p>
                     <ul>
                         {songList}

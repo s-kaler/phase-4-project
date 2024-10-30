@@ -170,7 +170,7 @@ class Playlists(Resource):
         form_data = request.get_json()
         new_song = Playlist(
             title=form_data['title'],
-            duration=form_data['duration'],
+            genre=form_data['genre'],
             artist_id=form_data['artist_id']
         )
 
@@ -197,6 +197,7 @@ class ArtistPlaylist(Resource):
         form_data = request.get_json()
         new_playlist = Playlist(
             name=form_data['name'],
+            genre=form_data['genre'],
             artist_id=artist_id
         )
 
