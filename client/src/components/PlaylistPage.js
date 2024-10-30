@@ -3,6 +3,7 @@ import { useParams, useOutletContext, Link, useNavigate } from "react-router-dom
 import { useFormik } from "formik";
 import * as yup from "yup";
 import './App.css';
+import PlaylistSong from "./PlaylistSong";
 
 function PlaylistPage() {
     const params = useParams();
@@ -91,36 +92,22 @@ function PlaylistPage() {
     }
 
     let songList = []
-    if(songs) {
+
+    if(songs)  {
         songList = songs.map(pSong => {
-            if (isUserArtist) {
-                return (
-                    <div key={pSong.id}>
-                        <li className="songlist" key={pSong.id}>
-                            {pSong.song.title} by <Link to={`/artist/${pSong.song.artist.id}`}>{pSong.song.artist.username}</Link>
-                             - {formatDuration(pSong.song.duration)} - |
-                            {" "}{formatRating(pSong.rating)}
-                            {" "}<button onClick={() => handleRemove(pSong)}>Remove</button>
-                        </li>
-                        <form onSubmit={(e) => handleAddToPlaylist(pSong.song, e)}>
-                            <select name="selections">
-                                {userPlaylistOptions}
-                            </select>
-                            <button type="submit">Add To Playlist</button>
-                        </form>
-                    </div>
-                    )
-            }
-            else {
-                return (
-                    <li className="songlist" key={pSong.id}>{pSong.song.title} by <Link to={`/artist/${pSong.song.artist.id}`}>{pSong.song.artist.username}</Link>
-                        - {formatDuration(pSong.song.duration)} - |
-                        {" "}{formatRating(pSong.rating)}
-                    </li>
-                )
-            }
+            return (
+                <PlaylistSong
+                    key={pSong.id}
+                    pSong={pSong}
+                    handleAddToPlaylist={handleAddToPlaylist}
+                    handleRemove={handleRemove}
+                    isUserArtist={isUserArtist}
+                    userPlaylists={userPlaylists}
+                />
+            )
         })
     }
+
     function formatDuration(duration) {
         const minutes = Math.floor(duration / 60);
         const seconds = duration % 60;
@@ -153,6 +140,10 @@ function PlaylistPage() {
 
     function handleEditClick() {
         setIsEditing(!isEditing)
+    }
+
+    function handleEditRating(pSong) {
+
     }
 
 
@@ -267,7 +258,7 @@ function PlaylistPage() {
                             <button name="edit-button" onClick={handleEditClick}>Edit Playlist</button>
                         </>
                     }
-                    <p className="playlist-song">Created by <Link to={`/artist/${playlistData.artist.id}`}> {playlistData.artist.username}</Link ></p>
+                    <p>Created by <Link to={`/artist/${playlistData.artist.id}`}> {playlistData.artist.username}</Link ></p>
                     <ul>
                         {songList}
                     </ul>
@@ -278,7 +269,7 @@ function PlaylistPage() {
             return (
                 <div className="playlist-page">
                     <h1>{playlistData.name}</h1>   
-                    <p className="playlist-song">Created by <Link to={`/artist/${playlistData.artist.id}`}> {playlistData.artist.username}</Link ></p>
+                    <p>Created by <Link to={`/artist/${playlistData.artist.id}`}> {playlistData.artist.username}</Link ></p>
                     <ul>
                         {songList}
                     </ul>

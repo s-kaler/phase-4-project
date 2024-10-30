@@ -270,6 +270,11 @@ class PlaylistSongs(Resource):
         
         return response
     
+
+api.add_resource(PlaylistSongs, '/playlists/<int:id>/songs')
+
+class  PlaylistSongById(Resource):
+
     def patch(self, id):
         playlist_song = PlaylistSong.query.filter(PlaylistSong.id == id).first()
         data = request.get_json()
@@ -284,10 +289,7 @@ class PlaylistSongs(Resource):
 
         response = make_response(response_dict, 200)
         return response
-
-api.add_resource(PlaylistSongs, '/playlists/<int:id>/songs')
-
-class  PlaylistSongById(Resource):
+    
     def delete(self, id):
         playlist_song = PlaylistSong.query.filter(PlaylistSong.id == id).first()
         db.session.delete(playlist_song)
