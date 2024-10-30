@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: 3132114f0a39
+Revision ID: 7149f4fa08d4
 Revises: 
-Create Date: 2024-10-28 16:14:14.574729
+Create Date: 2024-10-30 05:14:30.898949
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3132114f0a39'
+revision = '7149f4fa08d4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -31,6 +31,7 @@ def upgrade():
     op.create_table('playlists',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
+    sa.Column('genre', sa.String(), nullable=True),
     sa.Column('artist_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['artist_id'], ['artists.id'], name=op.f('fk_playlists_artist_id_artists')),
     sa.PrimaryKeyConstraint('id')
@@ -45,6 +46,7 @@ def upgrade():
     )
     op.create_table('playlist_songs',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('rating', sa.Integer(), nullable=True),
     sa.Column('playlist_id', sa.Integer(), nullable=False),
     sa.Column('song_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['playlist_id'], ['playlists.id'], name=op.f('fk_playlist_songs_playlist_id_playlists')),

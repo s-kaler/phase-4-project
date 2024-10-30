@@ -93,7 +93,10 @@ function PlaylistPage() {
             if (isUserArtist) {
                 return (
                     <div key={pSong.id}>
-                        <li className="songlist" key={pSong.id}>{pSong.song.title} by {pSong.song.artist.username} - {formatDuration(pSong.song.duration)} - <button onClick={() => handleRemove(pSong)}>Remove</button></li>
+                        <li className="songlist" key={pSong.id}>
+                            {pSong.song.title} by <Link to={`/artist/${pSong.song.artist.id}`}>{pSong.song.artist.username}</Link>
+                             - {formatDuration(pSong.song.duration)} - <button onClick={() => handleRemove(pSong)}>Remove</button>
+                            </li>
                         <form onSubmit={(e) => handleAddToPlaylist(pSong.song, e)}>
                             <select name="selections">
                                 {userPlaylistOptions}
@@ -105,7 +108,8 @@ function PlaylistPage() {
             }
             else {
                 return (
-                    <li className="songlist" key={pSong.id}>{pSong.song.title} by {pSong.song.artist.username} - {formatDuration(pSong.song.duration)}</li>
+                    <li className="songlist" key={pSong.id}>{pSong.song.title} by <Link to={`/artist/${pSong.song.artist.id}`}>{pSong.song.artist.username}</Link>
+                        - {formatDuration(pSong.song.duration)}</li>
                 )
             }
         })
