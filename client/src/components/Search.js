@@ -110,7 +110,7 @@ function Search() {
             
         }
         else if (formData.options === "playlist") {
-            setResults(allPlaylists.filter(playlist => playlist.name.toLowerCase().includes(formData.searchBox.toLowerCase())  || playlist.genre.toLowerCase().includes(formData.searchBox.toLower)))
+            setResults(allPlaylists.filter(playlist => playlist.name.toLowerCase().includes(formData.searchBox.toLowerCase())  || playlist.genre.toLowerCase().includes(formData.searchBox.toLowerCase())))
         }
     }
 

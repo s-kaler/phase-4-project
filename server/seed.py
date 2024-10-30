@@ -18,6 +18,7 @@ if __name__ == '__main__':
         Artist.query.delete()
         Song.query.delete()
         Playlist.query.delete()
+        PlaylistSong.query.delete()
 
         
         
